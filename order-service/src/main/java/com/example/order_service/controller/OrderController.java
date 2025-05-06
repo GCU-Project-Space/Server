@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.order_service.dto.Dto;
 import com.example.order_service.entity.Order;
 import com.example.order_service.service.OrderService;
 

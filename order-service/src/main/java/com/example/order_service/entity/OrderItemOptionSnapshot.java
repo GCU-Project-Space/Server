@@ -1,9 +1,5 @@
 package com.example.order_service.entity;
 
-import java.time.LocalDateTime;
-
-import com.example.order_service.domain.OrderStatus;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,18 +14,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class Order {
+public class OrderItemOptionSnapshot {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long recruitmentId;
+    private Long orderItemId;
 
-    private Long userId;
+    private String optionName;
 
-    private int totalPrice;
-
-    private OrderStatus status;
-
-    private LocalDateTime createdAt;
+    private String price;
 }
