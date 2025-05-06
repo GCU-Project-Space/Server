@@ -1,13 +1,10 @@
 package gcu.web.paymentservice.platform.application.in;
 
+import gcu.web.paymentservice.platform.adapter.in.web.dto.request.CancelPaymentRequest;
 import gcu.web.paymentservice.platform.adapter.in.web.dto.request.ConfirmPaymentRequest;
-import gcu.web.paymentservice.platform.adapter.in.web.dto.request.PaymentRequest;
 import gcu.web.paymentservice.platform.domain.Payment;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import java.net.http.HttpResponse;
 
 public interface PaymentUseCase {
 
@@ -21,13 +18,14 @@ public interface PaymentUseCase {
 
     /// 결제 생성
     // 리액트에게 결과 리턴
-    Payment savePayment(ConfirmPaymentRequest confirmPaymentRequest , HttpResponse<String> response) throws Exception;
+    Payment savePayment(ConfirmPaymentRequest confirmPaymentRequest) throws Exception;
 
     /// 결제 조회
     // 내 결제 목록 가져오기
     Page<Payment> findMyPayments(Long memberId, Pageable pageable);
 
     /// 결제 취소
-    void deletePayment(Long userId, Long paymentId);
+    void deletePayment(CancelPaymentRequest request);
+
 
 }
