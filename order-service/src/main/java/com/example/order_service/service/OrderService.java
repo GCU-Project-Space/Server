@@ -1,7 +1,10 @@
 package com.example.order_service.service;
 
+import org.springframework.stereotype.Service;
+
 import com.example.order_service.repository.OrderRepository;
 
+@Service
 public class OrderService{
     private final OrderRepository orderRepository;
     
