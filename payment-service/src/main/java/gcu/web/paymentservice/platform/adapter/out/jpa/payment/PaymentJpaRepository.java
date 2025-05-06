@@ -1,4 +1,6 @@
 package gcu.web.paymentservice.platform.adapter.out.jpa.payment;
 
-public interface PaymentJpaRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PaymentJpaRepository extends JpaRepository<PaymentJpaEntity, Long> {
 }
