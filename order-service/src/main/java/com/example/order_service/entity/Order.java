@@ -2,7 +2,7 @@ package com.example.order_service.entity;
 
 import java.time.LocalDateTime;
 
-import com.example.order_service.domain.OrderStatus;
+import com.example.order_service.model.OrderStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,4 +32,6 @@ public class Order {
     private OrderStatus status;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime deletedAt;
 }

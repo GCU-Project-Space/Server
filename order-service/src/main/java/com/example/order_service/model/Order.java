@@ -1,4 +1,4 @@
-package com.example.order_service.domain;
+package com.example.order_service.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
