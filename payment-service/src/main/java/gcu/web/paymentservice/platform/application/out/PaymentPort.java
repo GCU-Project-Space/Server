@@ -13,7 +13,7 @@ public interface PaymentPort {
 
     /// 결제 조회
     // 결제 상세 조회
-    Optional<Payment> loadPayment(String paymentId);
+    Optional<Payment> loadPayment(Long id);
 
     // 유저 아이디 바탕 결제 조회
     Page<Payment> loadPaymentsByUserId(Long userId, Pageable pageable);
