@@ -1,5 +1,6 @@
 package gcu.web.paymentservice.platform.adapter.out.jpa.payment;
 
+import gcu.web.paymentservice.platform.domain.Payment;
 import gcu.web.paymentservice.platform.domain.PaymentStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,8 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -35,6 +34,34 @@ public class PaymentJpaEntity {
 
     private PaymentStatus status;
 
-    private LocalDateTime createdAt;
+    private String createdAt;
 
+
+    /// From
+    public static PaymentJpaEntity from(Payment payment) {
+        return PaymentJpaEntity.builder()
+                .orderId(payment.getOrderId())
+                .orderName(payment.getOrderName())
+                .paymentMethod(payment.getPaymentMethod())
+                .paymentKey(payment.getPaymentKey())
+                .amount(payment.getAmount())
+                .status(payment.getStatus())
+                .createdAt(payment.getCreatedAt())
+                .build();
+    }
+
+    ///  ToDomain
+    public Payment toDomain() {
+        return Payment.builder()
+                .id(id)
+                .orderId(orderId)
+                .orderName(orderName)
+                .paymentMethod(paymentMethod)
+                .paymentKey(paymentKey)
+                .amount(amount)
+                .status(status)
+                .createdAt(createdAt)
+                .build();
+
+    }
 }

@@ -1,7 +1,14 @@
 package gcu.web.paymentservice.platform.domain;
 
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
 public class Payment {
 
     private Long id;
@@ -18,6 +25,19 @@ public class Payment {
 
     private PaymentStatus status;
 
-    private LocalDateTime createdAt;
+    private String createdAt;
+
+
+    public static Payment of(String orderId, String orderName, String paymentMethod, String paymentKey, int amount, String createdAt, PaymentStatus status) {
+        return Payment.builder()
+                .orderId(orderId)
+                .orderName(orderName)
+                .paymentMethod(paymentMethod)
+                .paymentKey(paymentKey)
+                .amount(amount)
+                .status(status)
+                .createdAt(createdAt)
+                .build();
+    }
 
 }
