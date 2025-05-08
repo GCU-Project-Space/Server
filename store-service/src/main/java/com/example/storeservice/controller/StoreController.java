@@ -11,6 +11,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import java.util.HashMap;
 import java.util.Map;
+import com.example.storeservice.dto.StoreUpdateDto;
+import com.example.storeservice.common.BaseResponse;
 
 
 @RestController
@@ -22,17 +24,21 @@ public class StoreController {
 
     @Operation(summary = "가게 등록", description = "새로운 가게를 등록합니다.")
     @PostMapping
-    public ResponseEntity<?> createStore(@Valid @RequestBody StoreRequestDto requestDto) {
+    public ResponseEntity<BaseResponse<Void>> createStore(@Valid @RequestBody StoreRequestDto requestDto) {
         storeService.createStore(requestDto);
-        // 성공적으로 가게가 등록되었을 때의 응답
-        Map<String, Object> response = new HashMap<>();
-        response.put("isSuccess", true);
-        response.put("code", 1001); // CREATED
-        response.put("message", "가게 등록 성공");
-        response.put("data", null); // 또는 등록된 store 정보 등
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(BaseResponse.success(1001, "가게 등록 성공", null));
     }
 
+
+    @PatchMapping("/{storeId}")
+    @Operation(summary = "가게 정보 수정", description = "가게의 일부 정보를 수정합니다.")
+    public ResponseEntity<BaseResponse<Void>> updateStore(
+        @PathVariable Long storeId,
+        @RequestBody StoreUpdateDto updateDto) {
+
+        storeService.updateStore(storeId, updateDto);
+        return ResponseEntity.ok(BaseResponse.success(1002, "가게 정보 수정 완료", null));
+    }
 }
