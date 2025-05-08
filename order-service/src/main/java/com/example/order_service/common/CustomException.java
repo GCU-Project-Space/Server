@@ -1,4 +1,4 @@
-package com.example.order_service.dto.response;
+package com.example.order_service.common;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

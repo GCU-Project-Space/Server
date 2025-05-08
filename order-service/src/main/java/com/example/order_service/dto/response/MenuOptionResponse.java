@@ -1,17 +1,17 @@
-package com.example.order_service.model;
+package com.example.order_service.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-public class OrderItemOption {
-
-    private Long optionId;
+@Setter
+public class MenuOptionResponse {
 
     private String optionName;
 

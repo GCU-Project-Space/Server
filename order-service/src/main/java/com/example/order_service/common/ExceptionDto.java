@@ -1,15 +1,12 @@
-package com.example.order_service.dto.response;
+package com.example.order_service.common;
 
 import lombok.Getter;
-import org.antlr.v4.runtime.misc.NotNull;
 
 @Getter
 public class ExceptionDto {
 
-    @NotNull
     private final Integer code;
 
-    @NotNull
     private final String message;
 
     public ExceptionDto(ErrorCode errorCode) {

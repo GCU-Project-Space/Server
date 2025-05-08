@@ -1,4 +1,4 @@
-package com.example.order_service.model;
+package com.example.order_service.dto.response;
 
 import java.util.List;
 
@@ -6,23 +6,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-public class OrderItem {
-
-    private Long menuId;
-
+@Setter
+public class MenuResponse {
+    
     private String menuName;
-
-    private int basePrice;
 
     private int count;
 
-    private int totalPrice;
+    private int basePrice;
 
-    private List<OrderItemOption> options; 
+    private int totalPrice;
     
+    private List<MenuOptionResponse> options;
+
 }

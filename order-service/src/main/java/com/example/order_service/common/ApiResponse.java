@@ -1,8 +1,10 @@
-package com.example.order_service.dto.response;
+package com.example.order_service.common;
+
+import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.micrometer.common.lang.Nullable;
-import org.springframework.http.HttpStatus;
 
 public record ApiResponse<T>(
         @JsonIgnore
