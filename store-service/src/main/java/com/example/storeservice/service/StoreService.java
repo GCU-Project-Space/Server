@@ -3,6 +3,7 @@ package com.example.storeservice.service;
 import com.example.storeservice.dto.StoreRequestDto;
 import com.example.storeservice.entity.Store;
 import com.example.storeservice.repository.StoreRepository;
+import com.example.storeservice.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,22 +12,20 @@ import org.springframework.stereotype.Service;
 public class StoreService {
 
     private final StoreRepository storeRepository;
+    private final StoreMapper storeMapper;
 
-    public Store createStore(StoreRequestDto requestDto) {
-        // 가게 이름 중복 확인
+    public void createStore(StoreRequestDto requestDto) {
+
         if (storeRepository.existsByName(requestDto.getName())) {
-            throw new IllegalArgumentException("이미 등록된 가게 이름입니다.");
+            throw new IllegalArgumentException("이미 존재하는 가게 이름입니다.");
         }
-
-        Store store = new Store(
-                requestDto.getName(),
-                requestDto.getPhone(),
-                requestDto.getLocation(),
-                requestDto.getDescription(),
-                requestDto.getOpenHours(),
-                requestDto.getMinOrderPrice()
-        );
-
-        return storeRepository.save(store);
+        if (storeRepository.existsByPhone(requestDto.getPhone())) {
+            throw new IllegalArgumentException("이미 존재하는 전화번호입니다.");
+        }
+        if (storeRepository.existsByLocation(requestDto.getLocation())) {
+            throw new IllegalArgumentException("이미 존재하는 위치입니다.");
+        }
+        Store store = storeMapper.toEntity(requestDto);
+        storeRepository.save(store);
     }
 }

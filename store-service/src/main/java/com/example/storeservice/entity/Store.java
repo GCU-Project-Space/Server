@@ -1,11 +1,9 @@
 package com.example.storeservice.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Getter
 @NoArgsConstructor
 public class Store {
 
@@ -20,12 +18,18 @@ public class Store {
     private String openHours;
     private int minOrderPrice;
 
-    public Store(String name, String phone, String location, String description, String openHours, int minOrderPrice) {
-        this.name = name;
-        this.phone = phone;
-        this.location = location;
-        this.description = description;
-        this.openHours = openHours;
-        this.minOrderPrice = minOrderPrice;
-    }
+    public Long getId() { return id; }
+    public String getName() { return name; }
+    public String getPhone() { return phone; }
+    public String getLocation() { return location; }
+    public String getDescription() { return description; }
+    public String getOpenHours() { return openHours; }
+    public int getMinOrderPrice() { return minOrderPrice; }
+
+    public void setName(String name) { this.name = name; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setLocation(String location) { this.location = location; }
+    public void setDescription(String description) { this.description = description; }
+    public void setOpenHours(String openHours) { this.openHours = openHours; }
+    public void setMinOrderPrice(int minOrderPrice) { this.minOrderPrice = minOrderPrice; }
 }

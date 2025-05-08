@@ -12,19 +12,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class StoreRequestDto {
 
-    @Schema(description = "가게 이름", example = "참치마요김밥", required = true)
+    @Schema(description = "가게 이름", example = "소머리국밥", required = true)
     @NotBlank(message = "가게 이름은 필수입니다.")
     private String name;
 
-    @Schema(description = "전화번호", example = "010-1234-5678", required = true)
+    @Schema(description = "전화번호", example = "010-1234-5611", required = true)
     @NotBlank(message = "전화번호는 필수입니다.")
     private String phone;
 
-    @Schema(description = "가게 위치", example = "서울시 강남구 역삼동", required = true)
+    @Schema(description = "가게 위치", example = "서울시 용산구", required = true)
     @NotBlank(message = "위치는 필수입니다.")
     private String location;
 
-    @Schema(description = "가게 설명", example = "참치와 마요네즈의 완벽한 조화")
+    @Schema(description = "가게 설명", example = "정말 맛있는 국밥!")
     private String description;
 
     @Schema(description = "영업 시간", example = "10:00~21:00", required = true)
