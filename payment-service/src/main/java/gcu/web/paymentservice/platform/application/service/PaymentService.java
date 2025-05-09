@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.net.http.HttpResponse;
 
 @Slf4j
@@ -64,7 +65,28 @@ public class PaymentService implements PaymentUseCase {
     }
 
     @Override
-    public void deletePayment(CancelPaymentRequest request) {
+    public void deletePayment(CancelPaymentRequest request) throws IOException, InterruptedException {
+
+        /// 존재 예외처리
+        Payment payment = paymentPort.loadPaymentByPaymentKey(request.paymentKey())
+                .orElseThrow(() -> new IllegalStateException(ErrorCode.NOT_FOUND_EXIST_PAYMENT.getMessage()));
+
+        /// 토스에게 요청
+        HttpResponse<String> response = pgPort.requestPaymentCancel(request.paymentKey(), request.cancelReason());
+        JsonNode responseBody = objectMapper.readTree(response.body());
+
+        log.info("response body: {}", responseBody.toString());
+
+        /// 응답값 DB에 저장
+        if (response.statusCode() == 200) {
+
+            // 객체 삭제
+            paymentPort.deletePayment(payment.getId());
+
+        } else {
+            log.error("response status code: {}", response.statusCode());
+            throw new IllegalStateException(ErrorCode.BAD_REQUEST.getMessage());
+        }
 
     }
 

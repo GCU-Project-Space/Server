@@ -17,8 +17,10 @@ public enum ErrorCode {
     // 404 Not Found
     NOT_FOUND_END_POINT(404, HttpStatus.NOT_FOUND, "요청한 대상이 존재하지 않습니다."),
     // 500 Internal Server Error
-    INTERNAL_SERVER_ERROR(500, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다.");
+    INTERNAL_SERVER_ERROR(500, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다."),
 
+    /// 결제
+    NOT_FOUND_EXIST_PAYMENT(5000, HttpStatus.NOT_FOUND, "결제 내역이 존재하지 않습니다."),;
 
     private final Integer code;
     private final HttpStatus httpStatus;
