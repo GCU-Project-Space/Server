@@ -1,4 +1,5 @@
 spring:
+
   application:
     name: store-service
 
@@ -18,6 +19,10 @@ spring:
   doc:
     api-docs:
       path: /api-docs
+
+user:
+  service:
+    url: http://localhost:9999  # 또는 mock 주소
 
 server:
   error:
