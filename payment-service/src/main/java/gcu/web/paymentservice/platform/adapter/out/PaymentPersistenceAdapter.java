@@ -34,12 +34,18 @@ public class PaymentPersistenceAdapter implements PaymentPort {
     }
 
     @Override
+    public Optional<Payment> loadPaymentByPaymentKey(String paymentKey) {
+        return repository.findByPaymentKey(paymentKey)
+                .map(PaymentJpaEntity::toDomain);
+    }
+
+    @Override
     public Page<Payment> loadPaymentsByUserId(Long userId, Pageable pageable) {
         return null;
     }
 
     @Override
-    public void deletePayment(String paymentId) {
-
+    public void deletePayment(Long paymentId) {
+        repository.deleteById(paymentId);
     }
 }

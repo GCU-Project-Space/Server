@@ -6,6 +6,8 @@ import gcu.web.paymentservice.platform.domain.Payment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
+
 public interface PaymentUseCase {
 
     /*
@@ -25,7 +27,7 @@ public interface PaymentUseCase {
     Page<Payment> findMyPayments(Long memberId, Pageable pageable);
 
     /// 결제 취소
-    void deletePayment(CancelPaymentRequest request);
+    void deletePayment(CancelPaymentRequest request) throws IOException, InterruptedException;
 
 
 }

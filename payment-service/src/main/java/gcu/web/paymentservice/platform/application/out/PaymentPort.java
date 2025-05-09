@@ -15,9 +15,11 @@ public interface PaymentPort {
     // 결제 상세 조회
     Optional<Payment> loadPayment(Long id);
 
+    Optional<Payment> loadPaymentByPaymentKey(String paymentKey);
+
     // 유저 아이디 바탕 결제 조회
     Page<Payment> loadPaymentsByUserId(Long userId, Pageable pageable);
 
     // 결제 삭제
-    void deletePayment(String paymentId);
+    void deletePayment(Long paymentId);
 }

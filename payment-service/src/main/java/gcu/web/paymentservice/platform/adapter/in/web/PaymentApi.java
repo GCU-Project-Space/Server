@@ -8,13 +8,7 @@ import gcu.web.paymentservice.platform.application.in.PaymentUseCase;
 import gcu.web.paymentservice.platform.domain.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -37,10 +31,18 @@ public class PaymentApi {
         return ApiResponse.created(PaymentResponse.from(payment), "결제가 정상적으로 성공되었습니다.");
     }
 
-     /// 결제 취소 요청
-    public ApiResponse<String> cancelPayment(@RequestBody CancelPaymentRequest request) throws IOException, InterruptedException {
+    /// 결제 취소 요청
+    @DeleteMapping("/refund")
+    public ApiResponse<String> cancelPayment(@RequestBody CancelPaymentRequest request) throws Exception {
 
-        return null;
+        log.info("cancelPayment called with paymentKey: {}", request.paymentKey());
+
+        // 토스에게 결제 취소 요청
+        paymentService.deletePayment(request);
+
+        // 모임 서비스에게 취소 요청을 보낸다.
+
+        return ApiResponse.ok(null, "취소 되었습니다.");
     }
 
 }
