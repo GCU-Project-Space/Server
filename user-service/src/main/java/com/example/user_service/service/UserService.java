@@ -73,4 +73,20 @@ public class UserService {
                 .message("로그인 성공 !")
                 .build();
     }
+
+    public UserResponseDTO getUserById(Long userId){
+        User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        return UserResponseDTO.builder()
+                .nickname(user.getNickname())
+                .id(user.getId())
+                .nickname(user.getNickname())
+                .school(user.getSchool())
+                .phoneNumber(user.getPhoneNumber())
+                .email(user.getEmail())
+                .schoolId(user.getSchoolId())
+                .createdAt(user.getCreatedAt())
+                .build();
+    }
 }
