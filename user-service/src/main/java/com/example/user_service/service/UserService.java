@@ -4,6 +4,7 @@ import com.example.user_service.DTO.UserLoginRequestDTO;
 import com.example.user_service.DTO.UserLoginResponseDTO;
 import com.example.user_service.DTO.UserRequestDTO;
 import com.example.user_service.DTO.UserResponseDTO;
+import com.example.user_service.DTO.UserUpdateRequestDTO;
 import com.example.user_service.entity.User;
 import com.example.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -88,5 +89,40 @@ public class UserService {
                 .schoolId(user.getSchoolId())
                 .createdAt(user.getCreatedAt())
                 .build();
+    }
+
+    public UserResponseDTO updateUser(Long userId, UserUpdateRequestDTO requestDTO){
+        User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        boolean isUpdated = false;
+
+        if(requestDTO.getNickname()!=null) {
+            user.setNickname(requestDTO.getNickname());
+            isUpdated = true;
+        }
+        if(requestDTO.getPassword()!=null) {
+            user.setPassword(requestDTO.getPassword());
+            isUpdated = true;
+        }
+        ;
+        if(requestDTO.getPhoneNumber()!=null) {
+            user.setPhoneNumber(requestDTO.getPhoneNumber());
+            isUpdated = true;
+        }
+
+        if(isUpdated){
+            userRepository.save(user);
+        }
+        
+        return UserResponseDTO.builder()
+        .id(user.getId())
+        .nickname(user.getNickname())
+        .school(user.getSchool())
+        .phoneNumber(user.getPhoneNumber())
+        .email(user.getEmail())
+        .schoolId(user.getSchoolId())
+        .createdAt(user.getCreatedAt())
+        .build();
     }
 }
