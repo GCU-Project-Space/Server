@@ -37,4 +37,14 @@ public class MenuController {
         return ResponseEntity.ok(BaseResponse.success(1011, "메뉴 수정 완료", null));
     }
 
+    @Operation(summary = "메뉴 삭제", description = "특정 메뉴를 삭제합니다.")
+    @DeleteMapping("/{menuId}")
+    public ResponseEntity<BaseResponse<Void>> deleteMenu(
+            @PathVariable Long storeId, // Swagger 일관성을 위해 받기만 함
+            @PathVariable Long menuId) {
+        menuService.deleteMenu(menuId);
+        return ResponseEntity.ok(BaseResponse.success(1012, "메뉴 삭제 완료", null));
+    }
+
+
 }

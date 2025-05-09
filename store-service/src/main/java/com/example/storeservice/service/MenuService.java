@@ -80,4 +80,15 @@ public class MenuService {
 
         menuRepository.save(menu); // 선택사항 (변경 감지 덕분에 없어도 됨)
     }
+
+    /**
+     * 메뉴 삭제
+     */
+    @Transactional
+    public void deleteMenu(Long menuId) {
+        Menu menu = menuRepository.findById(menuId)
+            .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND, "해당 메뉴를 찾을 수 없습니다."));
+        menuRepository.delete(menu);
+    }
+
 }
