@@ -58,15 +58,21 @@ public class TossPaymentAdapter implements PaymentExternalPort {
     /// 결제 취소 요청
     public HttpResponse<String> requestPaymentCancel(String paymentKey, String cancelReason) throws IOException, InterruptedException {
         System.out.println(paymentKey);
+
+        // 승인 요청에 사용할 JSON 객체 생성
+        JsonNode requestObj = objectMapper.createObjectNode()
+                .put("cancelReason", cancelReason);  // paymentKey는 URL에 포함되어 있으므로 요청 바디에 포함할 필요 없음
+
+        String requestBody = objectMapper.writeValueAsString(requestObj);  // JSON 문자열로 변환
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.tosspayments.com/v1/payments/" + paymentKey + "/cancel"))
                 .header("Authorization", authorizations)
                 .header("Content-Type", "application/json")
-                .method("POST", HttpRequest.BodyPublishers.ofString("cancelReason:" + cancelReason))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
+
         return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-
-
     }
 
 }
