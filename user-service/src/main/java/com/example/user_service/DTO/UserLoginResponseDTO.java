@@ -1,0 +1,14 @@
+package com.example.user_service.DTO;
+
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+
+public class UserLoginResponseDTO {
+    private String nickname;
+    private String message;
+}
