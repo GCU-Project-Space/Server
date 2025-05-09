@@ -64,4 +64,12 @@ public class StoreService {
         }
     }
 
+    @Transactional
+    public void deleteStore(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+        .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND,"가게를 찾을 수 없습니다."));
+        storeRepository.delete(store);
+}
+
+
 }
