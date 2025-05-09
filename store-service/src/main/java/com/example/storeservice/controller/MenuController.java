@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.storeservice.dto.MenuPartialUpdateDto;
-
+import java.util.List;
+import com.example.storeservice.dto.MenuResponseDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,10 +41,18 @@ public class MenuController {
     @Operation(summary = "메뉴 삭제", description = "특정 메뉴를 삭제합니다.")
     @DeleteMapping("/{menuId}")
     public ResponseEntity<BaseResponse<Void>> deleteMenu(
-            @PathVariable Long storeId, // Swagger 일관성을 위해 받기만 함
+            @PathVariable Long storeId,
             @PathVariable Long menuId) {
         menuService.deleteMenu(menuId);
         return ResponseEntity.ok(BaseResponse.success(1012, "메뉴 삭제 완료", null));
+    }
+
+    @Operation(summary = "가게 메뉴 목록 조회", description = "가게의 모든 메뉴를 조회하며, 할인 시 할인가 포함")
+    @GetMapping
+    public ResponseEntity<BaseResponse<List<MenuResponseDto>>> getMenusByStoreId(
+            @PathVariable Long storeId) {
+        List<MenuResponseDto> result = menuService.getMenusByStoreId(storeId);
+        return ResponseEntity.ok(BaseResponse.success(1000, "메뉴 목록 조회 성공", result));
     }
 
 

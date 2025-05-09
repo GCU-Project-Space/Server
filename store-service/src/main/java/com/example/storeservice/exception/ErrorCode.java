@@ -7,4 +7,8 @@ public class ErrorCode {
     public static final int INVALID_REQUEST = 2010;    
     public static final int DUPLICATE_MENU = 2011;
     public static final int MENU_NOT_FOUND = 2012;
+    public static final int INVALID_MENU_ID = 2013;
+    public static final int DISCOUNT_NOT_FOUND = 2014;
+    public static final int DUPLICATE_DISCOUNT = 2015;
+
 }

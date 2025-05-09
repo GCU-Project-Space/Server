@@ -12,6 +12,11 @@ import com.example.storeservice.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
+import com.example.storeservice.dto.MenuResponseDto;
+import com.example.storeservice.repository.MenuDiscountRepository;
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +25,7 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
     private final MenuMapper menuMapper;
+    private final MenuDiscountRepository menuDiscountRepository;
 
     /**
      * 메뉴 등록
@@ -89,6 +95,41 @@ public class MenuService {
         Menu menu = menuRepository.findById(menuId)
             .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND, "해당 메뉴를 찾을 수 없습니다."));
         menuRepository.delete(menu);
+    }
+
+    /**
+     * 메뉴 전체 삭제
+     */
+    @Transactional
+    public void deleteAllMenusByStoreId(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND, "해당 가게를 찾을 수 없습니다."));
+
+        List<Menu> menus = menuRepository.findByStoreId(storeId);
+        menuRepository.deleteAll(menus);
+    }
+
+
+    /**
+     * 메뉴 전체 불러오기
+     */
+    @Transactional(readOnly = true)
+    public List<MenuResponseDto> getMenusByStoreId(Long storeId) {
+        List<Menu> menus = menuRepository.findByStoreId(storeId);
+
+        return menus.stream()
+            .map(menu -> {
+                MenuResponseDto dto = menuMapper.toDto(menu);
+
+                menuDiscountRepository.findByMenuId(menu.getId()).ifPresent(discount -> {
+                    int rate = discount.getDiscountRate();
+                    dto.setDiscountRate(rate);
+                    dto.setDiscountedPrice(menu.getPrice() * (100 - rate) / 100);
+                });
+
+                return dto;
+            })
+            .collect(Collectors.toList());
     }
 
 }
