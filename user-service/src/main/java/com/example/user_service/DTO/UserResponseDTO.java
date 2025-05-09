@@ -17,5 +17,4 @@ public class UserResponseDTO {
     private String email;
     private int schoolId;
     private LocalDateTime createdAt;
-    private LocalDateTime inactiveAt;
 }

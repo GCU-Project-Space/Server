@@ -43,5 +43,4 @@ public class User {
 
     private int schoolId;
     private LocalDateTime createdAt;
-    private LocalDateTime inactiveAt;
 }

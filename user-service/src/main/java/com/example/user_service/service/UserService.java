@@ -49,7 +49,6 @@ public class UserService {
                 .email(savedUser.getEmail())
                 .schoolId(savedUser.getSchoolId())
                 .createdAt(savedUser.getCreatedAt())
-                .inactiveAt(savedUser.getInactiveAt())
                 .build();
     }
 
