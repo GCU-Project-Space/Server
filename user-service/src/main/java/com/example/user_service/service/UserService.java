@@ -1,5 +1,7 @@
 package com.example.user_service.service;
 
+import com.example.user_service.DTO.UserLoginRequestDTO;
+import com.example.user_service.DTO.UserLoginResponseDTO;
 import com.example.user_service.DTO.UserRequestDTO;
 import com.example.user_service.DTO.UserResponseDTO;
 import com.example.user_service.entity.User;
@@ -48,6 +50,28 @@ public class UserService {
                 .schoolId(savedUser.getSchoolId())
                 .createdAt(savedUser.getCreatedAt())
                 .inactiveAt(savedUser.getInactiveAt())
+                .build();
+    }
+
+    public UserLoginResponseDTO login(UserLoginRequestDTO requestDTO){
+        String nickname = requestDTO.getNickname();
+        String email = requestDTO.getEmail();
+        String password = requestDTO.getPassword();
+
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 닉네임입니다."));
+
+        if (!user.getEmail().equals(email)) {
+            throw new IllegalArgumentException("이메일이 일치하지 않습니다.");
+        }
+
+        if (!user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        return UserLoginResponseDTO.builder()
+                .nickname(user.getNickname())
+                .message("로그인 성공 !")
                 .build();
     }
 }
