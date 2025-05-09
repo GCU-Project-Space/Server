@@ -8,6 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface MenuMapper {
 
-    @Mapping(target = "store", ignore = true)  // store는 service에서 직접 주입
+
+    @Mapping(target = "id", ignore = true)  // 생성 시 ID는 자동 생성
+    @Mapping(target = "store", ignore = true)  // service 계층에서 직접 주입
     Menu toEntity(MenuRequestDto dto);
 }
+

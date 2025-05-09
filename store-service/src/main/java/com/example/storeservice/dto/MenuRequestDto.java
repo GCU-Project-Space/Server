@@ -34,9 +34,5 @@ public class MenuRequestDto {
 
     @Schema(description = "메뉴 이미지 URL", example = "https://cdn.example.com/images/menu1.jpg")
     private String imageUrl;
-
-    @Schema(description = "등록할 가게 ID", example = "1", required = true)
-    @NotNull(message = "storeId는 필수입니다.")
-    private Long storeId;
 }
 

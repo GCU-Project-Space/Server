@@ -43,7 +43,7 @@ public class StoreController {
     }
 
     @Operation(summary = "가게 삭제", description = "storeId에 해당하는 가게 정보를 삭제합니다.")
-    @DeleteMapping("/stores/{id}")
+    @DeleteMapping("/{storeid}")
     public ResponseEntity<BaseResponse<Void>> deleteStore(@PathVariable Long id) {
         storeService.deleteStore(id);
         return ResponseEntity.ok(BaseResponse.success(1003, "가게 삭제 성공", null));
