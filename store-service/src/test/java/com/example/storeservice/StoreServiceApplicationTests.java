@@ -26,7 +26,7 @@ public class StoreServiceApplicationTests {
         // 목데이터 설정
         ReviewResponseDto review1 = new ReviewResponseDto();
         review1.setId(1L);
-        review1.setStoreId(1);
+        review1.setStoreId(1L);
         review1.setUserId(101L);
         review1.setUserNickname("김갑수");
         review1.setContent("정말 맛있어요!");
@@ -35,7 +35,7 @@ public class StoreServiceApplicationTests {
 
         ReviewResponseDto review2 = new ReviewResponseDto();
         review2.setId(2L);
-        review2.setStoreId(1);
+        review2.setStoreId(1L);
         review2.setUserId(102L);
         review2.setUserNickname("박용례");
         review2.setContent("양도 많고 친절했습니다.");
