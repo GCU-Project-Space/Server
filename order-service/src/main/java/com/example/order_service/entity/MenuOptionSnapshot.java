@@ -2,6 +2,7 @@ package com.example.order_service.entity;
 
 import com.example.order_service.dto.response.MenuOptionResponse;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,7 @@ import lombok.Setter;
 //     private Long orderItemOptionId;
 // }
 
+@Hidden
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

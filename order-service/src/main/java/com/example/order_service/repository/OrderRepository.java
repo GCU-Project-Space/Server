@@ -20,6 +20,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     Optional<List<OrderEntity>> findByGroupId(@Param("groupId") Long groupId);
 
     @Query("SELECT o FROM OrderEntity o WHERE storeId = :storeId")
-    Optional<List<OrderEntity>> findByStoreId(Long storeId);
+    Optional<List<OrderEntity>> findByStoreId(@Param("storId") Long storeId);
     
 }
