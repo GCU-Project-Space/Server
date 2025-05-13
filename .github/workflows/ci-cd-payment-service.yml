@@ -35,7 +35,7 @@ jobs:
 
     - name: Set up application.properties
       run : |
-        mkdir -p src/main/resources
+        mkdir -p "${{ env.SERVICE_NAME }}"/src/main/resources
         echo "${{ env.APPLICATION }}" > "${{ env.SERVICE_NAME }}/src/main/resources/application.properties"
       
     - name: Grant execute permission for gradlew
