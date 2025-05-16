@@ -3,7 +3,7 @@ package gcu.web.paymentservice.platform.adapter.out.pg.toss;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gcu.web.paymentservice.platform.adapter.in.web.dto.request.ConfirmPaymentRequest;
-import gcu.web.paymentservice.platform.application.out.PaymentExternalPort;
+import gcu.web.paymentservice.platform.application.out.pg.PaymentExternalPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

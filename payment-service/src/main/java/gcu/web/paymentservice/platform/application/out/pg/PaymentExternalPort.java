@@ -1,4 +1,4 @@
-package gcu.web.paymentservice.platform.application.out;
+package gcu.web.paymentservice.platform.application.out.pg;
 
 import gcu.web.paymentservice.platform.adapter.in.web.dto.request.ConfirmPaymentRequest;
 

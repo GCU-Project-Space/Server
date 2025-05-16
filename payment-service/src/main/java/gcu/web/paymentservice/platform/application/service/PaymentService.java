@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gcu.web.paymentservice.common.response.ErrorCode;
 import gcu.web.paymentservice.platform.adapter.in.web.dto.request.CancelPaymentRequest;
 import gcu.web.paymentservice.platform.adapter.in.web.dto.request.ConfirmPaymentRequest;
+import gcu.web.paymentservice.platform.adapter.out.external.order.OrderFeignPort;
 import gcu.web.paymentservice.platform.application.in.PaymentUseCase;
-import gcu.web.paymentservice.platform.application.out.PaymentExternalPort;
+import gcu.web.paymentservice.platform.application.out.pg.PaymentExternalPort;
 import gcu.web.paymentservice.platform.application.out.PaymentPort;
 import gcu.web.paymentservice.platform.domain.Payment;
 import gcu.web.paymentservice.platform.domain.PaymentStatus;
@@ -23,7 +24,6 @@ import java.net.http.HttpResponse;
 @Slf4j
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class PaymentService implements PaymentUseCase {
 
     private final ObjectMapper objectMapper;
@@ -34,6 +34,15 @@ public class PaymentService implements PaymentUseCase {
     // 외부 토스 의존
     private final PaymentExternalPort pgPort;
 
+    // 주문 서비스 연동
+    private final OrderFeignPort orderFeignPort;
+
+    public PaymentService(ObjectMapper objectMapper, PaymentPort paymentPort, PaymentExternalPort pgPort, OrderFeignPort orderFeignPort) {
+        this.objectMapper = objectMapper;
+        this.paymentPort = paymentPort;
+        this.pgPort = pgPort;
+        this.orderFeignPort = orderFeignPort;
+    }
 
 
     // 리액트에게 결과 리턴
@@ -50,7 +59,13 @@ public class PaymentService implements PaymentUseCase {
         if (response.statusCode() == 200) {
             // 객체 저장
             Payment payment = createPayment(confirmPaymentRequest, responseBody);
-            return paymentPort.savePayment(payment);
+
+            Payment saved = paymentPort.savePayment(payment);
+
+            // 주문 정보 전달
+            orderFeignPort.completeOrder(saved.getOrderId());
+
+            return saved;
 
         } else {
             log.error("response status code: {}", response.statusCode());
@@ -82,6 +97,9 @@ public class PaymentService implements PaymentUseCase {
 
             // 객체 삭제
             paymentPort.deletePayment(payment.getId());
+
+            // 주문 취소 정보 전달
+            orderFeignPort.cancelOrder(payment.getOrderId());
 
         } else {
             log.error("response status code: {}", response.statusCode());
