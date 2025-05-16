@@ -26,6 +26,7 @@ public class OpenAPIConfiguration {
             .version("1.0.0")
             .description("API for managing products")
             .contact(contact);
+        
             
         return new OpenAPI().info(information).servers(List.of(server));
     }

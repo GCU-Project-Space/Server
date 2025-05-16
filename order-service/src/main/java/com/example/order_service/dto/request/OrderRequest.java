@@ -9,6 +9,8 @@ import com.example.order_service.entity.MenuOptionSnapshot;
 import com.example.order_service.entity.MenuSnapshot;
 import com.example.order_service.entity.OrderEntity;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,11 +23,13 @@ import lombok.Setter;
 @Setter
 @Builder
 public class OrderRequest {
-
+    @Schema(example = "1")
     private Long groupId;
 
+    @Schema(example = "1")
     private Long userId;
 
+    @Schema(example = "1")
     private Long storeId;
 
     @Builder.Default
@@ -76,19 +80,24 @@ public class OrderRequest {
 
 }
 
+@Hidden
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
 class Menu {
-
+    
+    @Schema(example = "1")
     private Long menuId;
 
+    @Schema(example = "맛있는 치킨")
     private String menuName;
 
+    @Schema(example = "11111")
     private int basePrice;
 
+    @Schema(example = "1")
     private int count;
 
     private List<MenuOption> options;
@@ -114,17 +123,20 @@ class Menu {
     }
 }
 
+@Hidden
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
 class MenuOption {
-
+    @Schema(example = "1")
     private Long optionId;
 
+    @Schema(example = "닭가슴살 추가")
     private String optionName;
 
+    @Schema(example = "0")
     private int price;
     
     public MenuOptionSnapshot toEntity() {

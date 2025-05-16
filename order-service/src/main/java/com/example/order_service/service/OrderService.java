@@ -33,7 +33,7 @@ public class OrderService{
      * - 가게 현재 주문 내역 조회
      * - 가게 전체 주문 내역 조회
      * U
-     * - 개인 주문 변경
+     * - 개인 주문 변경 (사용 하지 않음)
      * 
      * D (소프트 딜리트)
      * - 개인 주문 취소
@@ -63,15 +63,15 @@ public class OrderService{
     }
 
     public List<OrderResponse> getOrdersByUserId(Long userId) {
-        List<OrderEntity> orderEntities = orderRepository.findByUserId(userId)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+        List<OrderEntity> orderEntities = orderRepository.findByUserId(userId);
+        if (orderEntities.isEmpty()) throw new RuntimeException("User not found");
 
         return orderEntities.stream().map(order -> order.toResponse()).collect(Collectors.toList());
     }
 
     public List<OrderResponse> getOrdersByGroupId(Long groupId) {
-        List<OrderEntity> orderEntities = orderRepository.findByGroupId(groupId)
-        .orElseThrow(() -> new RuntimeException("Group not found"));
+        List<OrderEntity> orderEntities = orderRepository.findByGroupId(groupId);
+        if (orderEntities.isEmpty()) throw new RuntimeException("Group not found");
 
         return orderEntities.stream().map(order -> order.toResponse()).collect(Collectors.toList());
     }
@@ -120,8 +120,8 @@ public class OrderService{
     }
 
     public void cancelOrdersByGroupId(Long groupId) {
-        List<OrderEntity> orderEntities = orderRepository.findByGroupId(groupId)
-        .orElseThrow(() -> new RuntimeException("Group not found"));
+        List<OrderEntity> orderEntities = orderRepository.findByGroupId(groupId);
+        if (orderEntities.isEmpty()) throw new RuntimeException("Group not found");
 
         orderRepository.saveAll(orderEntities.stream()
             .map(order -> {
@@ -132,15 +132,18 @@ public class OrderService{
     }
 
     public List<OrderResponse> getOrdersByStoreId(Long storeId) {
-        return orderRepository.findByStoreId(storeId)
-        .orElseThrow(() -> new RuntimeException("Store not found"))
-        .stream().map(order -> order.toResponse()).collect(Collectors.toList());
+
+        List<OrderEntity> orderEntities = orderRepository.findByStoreId(storeId);
+        if (orderEntities.isEmpty()) throw new RuntimeException("Group not found");
+
+        return orderEntities.stream().map(order -> order.toResponse()).collect(Collectors.toList());
     }
 
     public List<OrderResponse> getCurrentOrdersByStoreId(Long storeId) {
-        return orderRepository.findByStoreId(storeId)
-        .orElseThrow(() -> new RuntimeException("Store not found"))
-        .stream().filter(order -> order.getStatus() == OrderStatus.PAID).map(order -> order.toResponse()).collect(Collectors.toList());
+        List<OrderEntity> orderEntities = orderRepository.findByStoreId(storeId);
+        if (orderEntities.isEmpty()) throw new RuntimeException("Group not found");
+        
+        return orderEntities.stream().filter(order -> order.getStatus() == OrderStatus.PAID).map(order -> order.toResponse()).collect(Collectors.toList());
     }
 
 }
