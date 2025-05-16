@@ -24,7 +24,6 @@ import java.net.http.HttpResponse;
 @Slf4j
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class PaymentService implements PaymentUseCase {
 
     private final ObjectMapper objectMapper;
@@ -37,6 +36,13 @@ public class PaymentService implements PaymentUseCase {
 
     // 주문 서비스 연동
     private final OrderFeignPort orderFeignPort;
+
+    public PaymentService(ObjectMapper objectMapper, PaymentPort paymentPort, PaymentExternalPort pgPort, OrderFeignPort orderFeignPort) {
+        this.objectMapper = objectMapper;
+        this.paymentPort = paymentPort;
+        this.pgPort = pgPort;
+        this.orderFeignPort = orderFeignPort;
+    }
 
 
     // 리액트에게 결과 리턴

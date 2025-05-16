@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-@FeignClient(name="ORDER-SERVICE", path="order-service")
+@FeignClient(name = "order-service", url = "http://localhost:8081")
 public interface OrderFeignPort {
 
     /*
@@ -13,10 +13,10 @@ public interface OrderFeignPort {
      */
 
     @PostMapping("/api/v1/orders/{orderId}/cancel")
-    String cancelOrder(@PathVariable String orderId);
+    String cancelOrder(@PathVariable("orderId") String orderId);
 
     @PostMapping("/api/v1/orders/{orderId}")
-    String completeOrder(@PathVariable String orderId);
-
+    String completeOrder(@PathVariable("orderId") String orderId);
 
 }
+
