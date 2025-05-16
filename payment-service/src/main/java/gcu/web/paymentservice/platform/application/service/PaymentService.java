@@ -6,7 +6,7 @@ import gcu.web.paymentservice.common.response.ErrorCode;
 import gcu.web.paymentservice.platform.adapter.in.web.dto.request.CancelPaymentRequest;
 import gcu.web.paymentservice.platform.adapter.in.web.dto.request.ConfirmPaymentRequest;
 import gcu.web.paymentservice.platform.application.in.PaymentUseCase;
-import gcu.web.paymentservice.platform.application.out.PaymentExternalPort;
+import gcu.web.paymentservice.platform.application.out.pg.PaymentExternalPort;
 import gcu.web.paymentservice.platform.application.out.PaymentPort;
 import gcu.web.paymentservice.platform.domain.Payment;
 import gcu.web.paymentservice.platform.domain.PaymentStatus;
