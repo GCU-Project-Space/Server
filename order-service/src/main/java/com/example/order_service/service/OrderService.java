@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.example.order_service.common.CustomException;
+import com.example.order_service.common.ErrorCode;
 import com.example.order_service.common.OrderStatus;
 import com.example.order_service.dto.request.OrderRequest;
 import com.example.order_service.dto.response.OrderResponse;
@@ -58,20 +60,20 @@ public class OrderService{
     // Read
     public OrderResponse getOrder(Long orderId) {
         return orderRepository.findById(orderId)
-        .orElseThrow(() -> new RuntimeException("Order not found"))
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND))
         .toResponse();
     }
 
     public List<OrderResponse> getOrdersByUserId(Long userId) {
         List<OrderEntity> orderEntities = orderRepository.findByUserId(userId);
-        if (orderEntities.isEmpty()) throw new RuntimeException("User not found");
+        if (orderEntities.isEmpty()) throw new CustomException(ErrorCode.NOT_FOUND);
 
         return orderEntities.stream().map(order -> order.toResponse()).collect(Collectors.toList());
     }
 
     public List<OrderResponse> getOrdersByGroupId(Long groupId) {
         List<OrderEntity> orderEntities = orderRepository.findByGroupId(groupId);
-        if (orderEntities.isEmpty()) throw new RuntimeException("Group not found");
+        if (orderEntities.isEmpty()) throw new CustomException(ErrorCode.NOT_FOUND);
 
         return orderEntities.stream().map(order -> order.toResponse()).collect(Collectors.toList());
     }
@@ -81,7 +83,7 @@ public class OrderService{
     public OrderResponse changeOrder(Long orderId, OrderRequest orderRequest) {
         // 1. 기존 주문 조회
         OrderEntity existingOrder = orderRepository.findById(orderId)
-            .orElseThrow(() -> new RuntimeException("Order not found"));
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         
         // 2. 기존 메뉴 및 옵션 제거 (고아 객체 제거)
         existingOrder.getMenus().clear();
@@ -102,7 +104,7 @@ public class OrderService{
 
     public OrderResponse payOrder(Long orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId)
-        .orElseThrow(() -> new RuntimeException("Order not found"));
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         
         orderEntity.pay();
 
@@ -112,7 +114,7 @@ public class OrderService{
     // Delete
     public void cancelOrder(Long orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId)
-        .orElseThrow(() -> new RuntimeException("Order not found"));
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         
         orderEntity.cancel();
 
@@ -121,7 +123,7 @@ public class OrderService{
 
     public void cancelOrdersByGroupId(Long groupId) {
         List<OrderEntity> orderEntities = orderRepository.findByGroupId(groupId);
-        if (orderEntities.isEmpty()) throw new RuntimeException("Group not found");
+        if (orderEntities.isEmpty()) throw new CustomException(ErrorCode.NOT_FOUND);
 
         orderRepository.saveAll(orderEntities.stream()
             .map(order -> {
@@ -134,14 +136,14 @@ public class OrderService{
     public List<OrderResponse> getOrdersByStoreId(Long storeId) {
 
         List<OrderEntity> orderEntities = orderRepository.findByStoreId(storeId);
-        if (orderEntities.isEmpty()) throw new RuntimeException("Group not found");
+        if (orderEntities.isEmpty()) throw new CustomException(ErrorCode.NOT_FOUND);
 
         return orderEntities.stream().map(order -> order.toResponse()).collect(Collectors.toList());
     }
 
     public List<OrderResponse> getCurrentOrdersByStoreId(Long storeId) {
         List<OrderEntity> orderEntities = orderRepository.findByStoreId(storeId);
-        if (orderEntities.isEmpty()) throw new RuntimeException("Group not found");
+        if (orderEntities.isEmpty()) throw new CustomException(ErrorCode.NOT_FOUND);
         
         return orderEntities.stream().filter(order -> order.getStatus() == OrderStatus.PAID).map(order -> order.toResponse()).collect(Collectors.toList());
     }
