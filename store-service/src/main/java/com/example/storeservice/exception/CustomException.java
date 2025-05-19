@@ -1,14 +1,15 @@
 package com.example.storeservice.exception;
 
 public class CustomException extends RuntimeException {
-    private final int code;
 
-    public CustomException(int code, String message) {
-        super(message);
-        this.code = code;
+    private final ErrorCode errorCode;
+
+    public CustomException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 
-    public int getCode() {
-        return code;
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 }

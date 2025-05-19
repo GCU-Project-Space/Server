@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import java.util.HashMap;
 import java.util.Map;
 import com.example.storeservice.dto.StoreUpdateDto;
-import com.example.storeservice.common.BaseResponse;
+import com.example.storeservice.response.BaseResponse;
 
 
 @RestController
@@ -28,7 +28,7 @@ public class StoreController {
         storeService.createStore(requestDto);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(BaseResponse.success(1001, "가게 등록 성공", null));
+            .body(BaseResponse.success(null));
     }
 
 
@@ -39,14 +39,14 @@ public class StoreController {
         @RequestBody StoreUpdateDto updateDto) {
 
         storeService.updateStore(storeId, updateDto);
-        return ResponseEntity.ok(BaseResponse.success(1002, "가게 정보 수정 완료", null));
+        return ResponseEntity.ok(BaseResponse.success(null));
     }
 
     @Operation(summary = "가게 삭제", description = "storeId에 해당하는 가게 정보를 삭제합니다.")
     @DeleteMapping("/{storeId}")
     public ResponseEntity<BaseResponse<Void>> deleteStore(@PathVariable Long storeId) {
         storeService.deleteStore(storeId);
-        return ResponseEntity.ok(BaseResponse.success(1003, "가게 삭제 성공", null));
+        return ResponseEntity.ok(BaseResponse.success(null));
     }
 
 }

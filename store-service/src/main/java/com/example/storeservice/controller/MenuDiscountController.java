@@ -1,6 +1,6 @@
 package com.example.storeservice.controller;
 
-import com.example.storeservice.common.BaseResponse;
+import com.example.storeservice.response.BaseResponse;
 import com.example.storeservice.dto.MenuDiscountRequestDto;
 import com.example.storeservice.service.MenuDiscountService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ public class MenuDiscountController {
             @RequestBody @Valid MenuDiscountRequestDto dto) {
 
         menuDiscountService.createDiscount(storeId, menuId, dto);
-        return ResponseEntity.ok(BaseResponse.success(1013, "메뉴 할인 등록 완료", null));
+        return ResponseEntity.ok(BaseResponse.success(null));
     }
 
     @Operation(summary = "메뉴 할인 삭제", description = "특정 메뉴의 할인율 정보를 삭제합니다.")
@@ -34,6 +34,6 @@ public class MenuDiscountController {
             @PathVariable Long menuId) {
 
         menuDiscountService.deleteDiscount(storeId, menuId);
-        return ResponseEntity.ok(BaseResponse.success(1014, "메뉴 할인 삭제 완료", null));
+        return ResponseEntity.ok(BaseResponse.success(null));
     }
 }
