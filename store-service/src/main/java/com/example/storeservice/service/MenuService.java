@@ -115,6 +115,10 @@ public class MenuService {
      */
     @Transactional(readOnly = true)
     public List<MenuResponseDto> getMenusByStoreId(Long storeId) {
+        
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND, "해당 가게를 찾을 수 없습니다."));
+
         List<Menu> menus = menuRepository.findByStoreId(storeId);
 
         return menus.stream()
