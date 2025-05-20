@@ -16,6 +16,10 @@ import com.example.order_service.dto.request.OrderRequest;
 import com.example.order_service.dto.response.OrderResponse;
 import com.example.order_service.service.OrderService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 @RestController
 @RequestMapping("/api/v1/orders")
 public class OrderController {
@@ -29,7 +33,7 @@ public class OrderController {
     // Create
     // 개인 주문 추가
     @PostMapping
-    public ResponseEntity<ResponseBody<OrderResponse>> addOrder(@RequestBody OrderRequest order) {
+    public ResponseEntity<ResponseBody<OrderResponse>> addOrder(@RequestBody @NotNull @Valid OrderRequest order) {
 
         OrderResponse response = orderService.createOrder(order);
 
@@ -39,7 +43,7 @@ public class OrderController {
     // Read
     // 주문 상세 조회
     @GetMapping("/detail/{orderId}")
-    public ResponseEntity<ResponseBody<OrderResponse>> getOrderDetail(@PathVariable Long orderId) {
+    public ResponseEntity<ResponseBody<OrderResponse>> getOrderDetail(@PathVariable @NotNull @Min(1) Long orderId) {
         
         OrderResponse response = orderService.getOrder(orderId);
         
@@ -48,7 +52,7 @@ public class OrderController {
 
     // 주문 내역 조회
     @GetMapping("/{userId}")
-    public ResponseEntity<ResponseBody<List<OrderResponse>>> getUserOrders(@PathVariable Long userId) {
+    public ResponseEntity<ResponseBody<List<OrderResponse>>> getUserOrders(@PathVariable @NotNull @Min(1) Long userId) {
 
         List<OrderResponse> response = orderService.getOrdersByUserId(userId);
 
@@ -57,7 +61,7 @@ public class OrderController {
 
     // 가게 주문 내역 조회
     @GetMapping("/stores/{storeId}")
-    public ResponseEntity<ResponseBody<List<OrderResponse>>> getStoreOrders(@PathVariable Long storeId) {
+    public ResponseEntity<ResponseBody<List<OrderResponse>>> getStoreOrders(@PathVariable @NotNull @Min(1) Long storeId) {
 
         List<OrderResponse> response = orderService.getCurrentOrdersByStoreId(storeId);
 
@@ -70,7 +74,7 @@ public class OrderController {
     // Delete
     // 단체 주문 취소
     @PatchMapping("/recruitments/{recruitmentId}/cancel")
-    public ResponseEntity<ResponseBody<Void>> cancelGroupOrder(@PathVariable Long recruitmentId) {
+    public ResponseEntity<ResponseBody<Void>> cancelGroupOrder(@PathVariable @NotNull @Min(1) Long recruitmentId) {
 
         orderService.cancelOrdersByGroupId(recruitmentId);
 
@@ -79,7 +83,7 @@ public class OrderController {
 
     // 개인 주문 취소
     @PatchMapping("/{orderId}/cancel")
-    public ResponseEntity<ResponseBody<Void>> cancelOrder(@PathVariable Long orderId) {
+    public ResponseEntity<ResponseBody<Void>> cancelOrder(@PathVariable @NotNull @Min(1) Long orderId) {
 
         orderService.cancelOrder(orderId);
 
