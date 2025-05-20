@@ -3,15 +3,16 @@ package gcu.web.paymentservice.common.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins("http://localhost:3000", "http://54.66.149.225", " http://34.127.7.212")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")  // 모든 헤더 허용
                 .allowCredentials(true);  // 쿠키 포함 허용;
@@ -20,7 +21,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // allowedOrigins : 허용할 origin ("*"로 모든 origin 허용 가능, 여러 개도 지정 가능)
         // allowedMethods : 허용할 HTTP Method ("*"로 모든 Method 허용 가능)
         // maxAge : 요청을 캐싱할 시간
-
     }
 }
 

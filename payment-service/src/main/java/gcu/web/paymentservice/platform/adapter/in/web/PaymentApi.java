@@ -4,6 +4,7 @@ import gcu.web.paymentservice.common.response.ApiResponse;
 import gcu.web.paymentservice.platform.adapter.in.web.dto.request.CancelPaymentRequest;
 import gcu.web.paymentservice.platform.adapter.in.web.dto.request.ConfirmPaymentRequest;
 import gcu.web.paymentservice.platform.adapter.in.web.dto.response.PaymentResponse;
+import gcu.web.paymentservice.platform.adapter.in.web.swagger.PaymentApiSpec;
 import gcu.web.paymentservice.platform.application.in.PaymentUseCase;
 import gcu.web.paymentservice.platform.domain.Payment;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
-public class PaymentApi {
+public class PaymentApi implements PaymentApiSpec {
 
     private final PaymentUseCase paymentService;
 
