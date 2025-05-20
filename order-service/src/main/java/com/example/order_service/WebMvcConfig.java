@@ -12,8 +12,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedHeaders("*")  // 모든 헤더 허용
-                .allowCredentials(true);  // 쿠키 포함 허용;
+                .allowedHeaders("*");  // 모든 헤더 허용
+                //.allowCredentials(true);  // 쿠키 포함 허용;
 
         // addMapping : CORS를 적용할 url의 패턴을 정의 ("/**"로 모든 패턴 가능)
         // allowedOrigins : 허용할 origin ("*"로 모든 origin 허용 가능, 여러 개도 지정 가능)
