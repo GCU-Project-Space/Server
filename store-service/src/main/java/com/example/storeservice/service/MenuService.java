@@ -34,11 +34,11 @@ public class MenuService {
     public void createMenu(Long storeId, MenuRequestDto dto) {
         // 1. 가게 존재 확인
         Store store = storeRepository.findById(storeId)
-            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND, "해당 가게를 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
 
         // 2. 중복 메뉴 이름 검사
         if (menuRepository.existsByStoreIdAndName(storeId, dto.getName())) {
-            throw new CustomException(ErrorCode.DUPLICATE_MENU, "이미 등록된 메뉴 이름입니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_MENU);
         }
 
         // 3. DTO → Entity 변환
@@ -57,13 +57,13 @@ public class MenuService {
     @Transactional
     public void updateMenuPartially(Long menuId, MenuPartialUpdateDto dto) {
         Menu menu = menuRepository.findById(menuId)
-            .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND, "해당 메뉴를 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND));
 
         // 이름 중복 검사
         if (dto.getName() != null && !dto.getName().isBlank()) {
             if (!menu.getName().equals(dto.getName()) &&
                 menuRepository.existsByStoreIdAndName(menu.getStore().getId(), dto.getName())) {
-                throw new CustomException(ErrorCode.DUPLICATE_MENU, "이미 존재하는 메뉴 이름입니다.");
+                throw new CustomException(ErrorCode.DUPLICATE_MENU);
             }
             menu.setName(dto.getName());
         }
@@ -93,7 +93,7 @@ public class MenuService {
     @Transactional
     public void deleteMenu(Long menuId) {
         Menu menu = menuRepository.findById(menuId)
-            .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND, "해당 메뉴를 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND));
         menuRepository.delete(menu);
     }
 
@@ -103,7 +103,7 @@ public class MenuService {
     @Transactional
     public void deleteAllMenusByStoreId(Long storeId) {
         Store store = storeRepository.findById(storeId)
-            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND, "해당 가게를 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
 
         List<Menu> menus = menuRepository.findByStoreId(storeId);
         menuRepository.deleteAll(menus);
@@ -115,6 +115,10 @@ public class MenuService {
      */
     @Transactional(readOnly = true)
     public List<MenuResponseDto> getMenusByStoreId(Long storeId) {
+        
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
+
         List<Menu> menus = menuRepository.findByStoreId(storeId);
 
         return menus.stream()

@@ -7,9 +7,13 @@ import com.example.storeservice.exception.CustomException;
 import com.example.storeservice.exception.ErrorCode;
 import com.example.storeservice.repository.MenuDiscountRepository;
 import com.example.storeservice.repository.MenuRepository;
+import com.example.storeservice.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.storeservice.entity.Store;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -17,22 +21,27 @@ public class MenuDiscountService {
 
     private final MenuRepository menuRepository;
     private final MenuDiscountRepository menuDiscountRepository;
+    private final StoreRepository storeRepository;
 
     /**
      * 메뉴 할인 등록
      */
     @Transactional
     public void createDiscount(Long storeId, Long menuId, MenuDiscountRequestDto dto) {
+
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
+        
         Menu menu = menuRepository.findById(menuId)
-            .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND, "해당 메뉴를 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND));
 
         // 메뉴가 storeId에 속해 있는지 검증
         if (!menu.getStore().getId().equals(storeId)) {
-            throw new CustomException(ErrorCode.INVALID_MENU_ID, "해당 메뉴는 요청한 가게의 메뉴가 아닙니다.");
+            throw new CustomException(ErrorCode.INVALID_MENU_ID);
         }
 
         if (menuDiscountRepository.existsByMenuId(menuId)) {
-            throw new CustomException(ErrorCode.DUPLICATE_DISCOUNT, "이미 해당 메뉴에 할인 정보가 존재합니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_DISCOUNT);
         }
 
         MenuDiscount discount = new MenuDiscount();
@@ -47,16 +56,20 @@ public class MenuDiscountService {
      */
     @Transactional
     public void deleteDiscount(Long storeId, Long menuId) {
+
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
+        
         Menu menu = menuRepository.findById(menuId)
-            .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND, "해당 메뉴를 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND));
 
         // 메뉴가 storeId에 속해 있는지 검증
         if (!menu.getStore().getId().equals(storeId)) {
-            throw new CustomException(ErrorCode.INVALID_MENU_ID, "해당 메뉴는 요청한 가게의 메뉴가 아닙니다.");
+            throw new CustomException(ErrorCode.INVALID_MENU_ID);
         }
 
         if (!menuDiscountRepository.existsByMenuId(menuId)) {
-            throw new CustomException(ErrorCode.DISCOUNT_NOT_FOUND, "해당 메뉴의 할인 정보가 존재하지 않습니다.");
+            throw new CustomException(ErrorCode.DISCOUNT_NOT_FOUND);
         }
 
         menuDiscountRepository.deleteByMenuId(menuId);

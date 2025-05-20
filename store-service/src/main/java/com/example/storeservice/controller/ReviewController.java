@@ -1,6 +1,6 @@
 package com.example.storeservice.controller;
 
-import com.example.storeservice.common.BaseResponse;
+import com.example.storeservice.response.BaseResponse;
 import com.example.storeservice.dto.ReviewResponseDto;
 import com.example.storeservice.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +23,6 @@ public class ReviewController {
             @PathVariable Long storeId) {
 
         List<ReviewResponseDto> reviews = reviewService.getReviewsByStoreId(storeId);
-        return ResponseEntity.ok(BaseResponse.success(1000, "가게 리뷰 목록 조회 성공", reviews));
+        return ResponseEntity.ok(BaseResponse.success(reviews));
     }
 }

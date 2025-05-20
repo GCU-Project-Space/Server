@@ -23,15 +23,15 @@ public class StoreService {
     @Transactional
     public void createStore(StoreRequestDto requestDto) {
     if (storeRepository.existsByName(requestDto.getName())) {
-        throw new CustomException(ErrorCode.DUPLICATE_NAME, "이미 존재하는 가게 이름입니다.");
+        throw new CustomException(ErrorCode.DUPLICATE_NAME);
         }
 
     if (storeRepository.existsByPhone(requestDto.getPhone())) {
-        throw new CustomException(ErrorCode.DUPLICATE_PHONE, "이미 존재하는 전화번호입니다.");
+        throw new CustomException(ErrorCode.DUPLICATE_PHONE);
         }
 
     if (storeRepository.existsByLocation(requestDto.getLocation())) {
-        throw new CustomException(ErrorCode.DUPLICATE_LOCATION, "이미 존재하는 위치입니다.");
+        throw new CustomException(ErrorCode.DUPLICATE_LOCATION);
         }
 
     Store store = storeMapper.toEntity(requestDto);
@@ -42,12 +42,12 @@ public class StoreService {
     @Transactional
     public void updateStore(Long storeId, StoreUpdateDto updateDto) {
         Store store = storeRepository.findById(storeId)
-            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND, "가게를 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
 
         // 이름 중복 검사
         if (updateDto.getName() != null && !updateDto.getName().isBlank()) {
             if (storeRepository.existsByNameAndIdNot(updateDto.getName(), storeId)) {
-                throw new CustomException(ErrorCode.DUPLICATE_NAME, "이미 존재하는 가게 이름입니다.");
+                throw new CustomException(ErrorCode.DUPLICATE_NAME);
             }
             store.setName(updateDto.getName());
         }
@@ -55,7 +55,7 @@ public class StoreService {
         // 전화번호 중복 검사
         if (updateDto.getPhone() != null && !updateDto.getPhone().isBlank()) {
             if (storeRepository.existsByPhoneAndIdNot(updateDto.getPhone(), storeId)) {
-                throw new CustomException(ErrorCode.DUPLICATE_PHONE, "이미 존재하는 전화번호입니다.");
+                throw new CustomException(ErrorCode.DUPLICATE_PHONE);
             }
             store.setPhone(updateDto.getPhone());
         }
@@ -63,7 +63,7 @@ public class StoreService {
         // 위치 중복 검사
         if (updateDto.getLocation() != null && !updateDto.getLocation().isBlank()) {
             if (storeRepository.existsByLocationAndIdNot(updateDto.getLocation(), storeId)) {
-                throw new CustomException(ErrorCode.DUPLICATE_LOCATION, "이미 존재하는 위치입니다.");
+                throw new CustomException(ErrorCode.DUPLICATE_LOCATION);
             }
             store.setLocation(updateDto.getLocation());
         }
@@ -84,7 +84,7 @@ public class StoreService {
     @Transactional
     public void deleteStore(Long storeId) {
         Store store = storeRepository.findById(storeId)
-        .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND,"가게를 찾을 수 없습니다."));
+        .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
         storeRepository.delete(store);
     }
 
