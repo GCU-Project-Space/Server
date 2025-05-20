@@ -10,12 +10,12 @@ env:
   SERVICE_NAME: payment-service   # 예: order-service
   DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.DOCKER_IMAGE_NAME }}:latest
   EC2_HOST: ${{ secrets.EC2_HOST }}
-  EC2_SSH_USER: ec2-user
+  EC2_SSH_USER: ${{secrets.EC2_SSH_USER}}
   PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
   TIMEZONE: Asia/Seoul
   DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKER_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-  PROJECT_PATH: /home/ec2-user/delivery-system/payment-service # 예: /home/ec2-user/delivery-system/order-service
+  PROJECT_PATH: /home/kmj02dev/delivery-system/payment-service # 예: /home/ec2-user/delivery-system/order-service
   APPLICATION: ${{ secrets.APPLICATION }}
   
 jobs:
