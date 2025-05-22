@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,7 +66,7 @@ public class OrderController {
 
     // Update
     // 주문 전송
-    @PatchMapping("/{orderId}/submit")
+    @PutMapping("/{orderId}/submit")
     public ResponseEntity<ResponseBody<OrderResponse>> submitOrder(@PathVariable Long orderId) {
         OrderResponse response = orderService.payOrder(orderId);
 
@@ -75,7 +75,7 @@ public class OrderController {
 
     // Delete
     // 단체 주문 취소
-    @PatchMapping("/recruitments/{recruitmentId}/cancel")
+    @PutMapping("/recruitments/{recruitmentId}/cancel")
     public ResponseEntity<ResponseBody<Void>> cancelGroupOrder(@PathVariable Long recruitmentId) {
 
         orderService.cancelOrdersByGroupId(recruitmentId);
@@ -84,7 +84,7 @@ public class OrderController {
     }
 
     // 개인 주문 취소
-    @PatchMapping("/{orderId}/cancel")
+    @PutMapping("/{orderId}/cancel")
     public ResponseEntity<ResponseBody<Void>> cancelOrder(@PathVariable Long orderId) {
 
         orderService.cancelOrder(orderId);
