@@ -63,7 +63,7 @@ public class PaymentService implements PaymentUseCase {
             Payment saved = paymentPort.savePayment(payment);
 
             // 주문 정보 전달
-            orderFeignPort.completeOrder(saved.getOrderId());
+            orderFeignPort.completeOrder(Long.valueOf(saved.getOrderId()));
 
             return saved;
 
