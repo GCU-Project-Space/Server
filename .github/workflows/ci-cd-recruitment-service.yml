@@ -15,7 +15,8 @@ env:
   TIMEZONE: Asia/Seoul
   DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKER_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-  PROJECT_PATH: /home/kmj02dev/delivery-system/recruitment-service # 예: /home/ec2-user/delivery-system/order-service
+  PROJECT_PATH: /home/ec2-user/delivery-system/recruitment-service # 예: /home/ec2-user/delivery-system/order-service
+  APPLICATION: ${{ secrets.APPLICATION }}
 
 jobs:
   build-and-push:
@@ -32,6 +33,11 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
+    - name: Set up application.properties
+      run: |
+        mkdir -p "${{ env.SERVICE_NAME }}"/src/main/resources
+        echo "${{ env.APPLICATION }}" > "${{ env.SERVICE_NAME }}/src/main/resources/application.properties"
+      
     - name: Grant execute permission for gradlew
       run: chmod +x ${{ env.SERVICE_NAME }}/gradlew
 
