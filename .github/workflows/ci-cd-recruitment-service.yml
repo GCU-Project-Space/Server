@@ -15,7 +15,7 @@ env:
   TIMEZONE: Asia/Seoul
   DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKER_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-  PROJECT_PATH: /home/ec2-user/delivery-system/recruitment-service # 예: /home/ec2-user/delivery-system/order-service
+  PROJECT_PATH: /home/kmj02dev/delivery-system/recruitment-service # 예: /home/ec2-user/delivery-system/order-service
   APPLICATION: ${{ secrets.APPLICATION }}
 
 jobs:
