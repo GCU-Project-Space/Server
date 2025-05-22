@@ -1,11 +1,12 @@
 package com.example.user_service.service;
 
 import com.example.user_service.DTO.UserLoginRequestDTO;
-import com.example.user_service.DTO.UserLoginResponseDTO;
 import com.example.user_service.DTO.UserRequestDTO;
 import com.example.user_service.DTO.UserResponseDTO;
 import com.example.user_service.DTO.UserUpdateRequestDTO;
 import com.example.user_service.entity.User;
+import com.example.user_service.exception.CustomException;
+import com.example.user_service.exception.ErrorCode;
 import com.example.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,11 @@ public class UserService {
         String email = requestDTO.getEmail();
 
         if(!email.endsWith("ac.kr")){
-            throw new IllegalArgumentException("학교 이메일(.ac.kr)만 사용할 수 있습니다.");
+            throw new CustomException(ErrorCode.INVALID_EMAIL_TYPE);
         }
 
         if(userRepository.existsByEmail(email)){
-            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         }
 
         User user = User.builder()
@@ -53,31 +54,31 @@ public class UserService {
                 .build();
     }
 
-    public UserLoginResponseDTO login(UserLoginRequestDTO requestDTO){
-        String nickname = requestDTO.getNickname();
+    public UserResponseDTO login(UserLoginRequestDTO requestDTO){
         String email = requestDTO.getEmail();
         String password = requestDTO.getPassword();
 
-        User user = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 닉네임입니다."));
-
-        if (!user.getEmail().equals(email)) {
-            throw new IllegalArgumentException("이메일이 일치하지 않습니다.");
-        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND_BY_EMAIL));
 
         if (!user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
-        return UserLoginResponseDTO.builder()
+        return UserResponseDTO.builder()
+                .id(user.getId())
                 .nickname(user.getNickname())
-                .message("로그인 성공 !")
+                .school(user.getSchool())
+                .phoneNumber(user.getPhoneNumber())
+                .email(user.getEmail())
+                .schoolId(user.getSchoolId())
+                .createdAt(user.getCreatedAt())
                 .build();
     }
 
     public UserResponseDTO getUserById(Long userId){
         User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return UserResponseDTO.builder()
                 .nickname(user.getNickname())
@@ -93,7 +94,7 @@ public class UserService {
 
     public UserResponseDTO updateUser(Long userId, UserUpdateRequestDTO requestDTO){
         User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         boolean isUpdated = false;
 
