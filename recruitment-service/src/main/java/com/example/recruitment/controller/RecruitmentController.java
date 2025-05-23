@@ -10,6 +10,8 @@ import com.example.recruitment.repository.RecruitmentParticipantRepository;
 import com.example.recruitment.repository.RecruitmentRepository;
 import com.example.recruitment.repository.StoreRepository;
 import com.example.recruitment.repository.UserRepository;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +31,7 @@ public class RecruitmentController {
 
     // 모집글 생성
     @PostMapping
-    public Recruitment createRecruitment(@RequestBody RecruitmentRequestDto dto) {
+    public Recruitment createRecruitment(@Valid @RequestBody RecruitmentRequestDto dto) {
         User user = userRepository.findById(dto.getUserId()).orElseThrow();
         Store store = storeRepository.findById(dto.getStoreId()).orElseThrow();
 
@@ -184,7 +186,7 @@ public ResponseEntity<?> deleteRecruitment(@PathVariable Long recruitmentId) {
 // 모집글 수정
 @PutMapping("/{recruitmentId}")
 public ResponseEntity<?> updateRecruitment(@PathVariable Long recruitmentId,
-                                            @RequestBody RecruitmentRequestDto dto) {
+                                            @Valid @RequestBody RecruitmentRequestDto dto) {
     Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElseThrow();
 
     // (선택) 본인 작성한 글인지 확인
