@@ -1,8 +1,10 @@
 package com.example.storeservice.controller;
 
 import com.example.storeservice.dto.StoreRequestDto;
+import com.example.storeservice.dto.StoreResponseDto;
 import com.example.storeservice.entity.Store;
 import com.example.storeservice.service.StoreService;
+import com.example.storeservice.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import java.util.HashMap;
 import java.util.Map;
 import com.example.storeservice.dto.StoreUpdateDto;
-import com.example.storeservice.response.BaseResponse;
+import java.util.List;
 
 
 @RestController
@@ -26,11 +28,22 @@ public class StoreController {
     @PostMapping
     public ResponseEntity<BaseResponse<Void>> createStore(@Valid @RequestBody StoreRequestDto requestDto) {
         storeService.createStore(requestDto);
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(BaseResponse.success(null));
+        return ResponseEntity.ok(BaseResponse.success(null));
     }
 
+    @GetMapping("/{storeId}")
+    @Operation(summary = "단일 가게 조회", description = "storeId에 해당하는 가게의 상세 정보를 조회합니다.")
+    public ResponseEntity<BaseResponse<StoreResponseDto>> getStoreById(@PathVariable Long storeId) {
+        StoreResponseDto store = storeService.getStoreById(storeId);
+        return ResponseEntity.ok(BaseResponse.success(store));
+    }
+
+    @GetMapping
+    @Operation(summary = "전체 가게 목록 조회", description = "등록된 모든 가게 정보를 조회합니다.")
+    public ResponseEntity<BaseResponse<List<StoreResponseDto>>> getAllStores() {
+        List<StoreResponseDto> stores = storeService.getAllStores();
+        return ResponseEntity.ok(BaseResponse.success(stores));
+    }
 
     @PatchMapping("/{storeId}")
     @Operation(summary = "가게 정보 수정", description = "가게의 일부 정보를 수정합니다.")
