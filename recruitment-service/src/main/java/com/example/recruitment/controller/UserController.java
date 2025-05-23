@@ -2,6 +2,8 @@ package com.example.recruitment.controller;
 
 import com.example.recruitment.entity.User;
 import com.example.recruitment.repository.UserRepository;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,7 @@ public class UserController {
     private final UserRepository userRepository;
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
         return userRepository.save(user);
     }
 

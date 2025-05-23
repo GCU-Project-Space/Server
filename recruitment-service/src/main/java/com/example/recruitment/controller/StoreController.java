@@ -2,6 +2,8 @@ package com.example.recruitment.controller;
 
 import com.example.recruitment.entity.Store;
 import com.example.recruitment.repository.StoreRepository;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,7 @@ public class StoreController {
     private final StoreRepository storeRepository;
 
     @PostMapping
-    public Store createStore(@RequestBody Store store) {
+    public Store createStore(@Valid @RequestBody Store store) {
         return storeRepository.save(store);
     }
 
