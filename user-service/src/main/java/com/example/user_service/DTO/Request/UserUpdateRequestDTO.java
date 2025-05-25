@@ -1,4 +1,4 @@
-package com.example.user_service.DTO;
+package com.example.user_service.DTO.Request;
 
 import lombok.*;
 
