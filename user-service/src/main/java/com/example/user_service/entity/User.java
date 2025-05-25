@@ -21,8 +21,13 @@ import jakarta.persistence.Table;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "`user`")
+@Table(name = "users")
 public class User {
+
+    public enum UserType {
+        USER,
+        OWNER
+    }
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -34,6 +39,8 @@ public class User {
     @NotBlank
     private String password;
 
+    private UserType userType;
+
     @NotBlank
     private String school;
 
@@ -42,6 +49,8 @@ public class User {
 
     @NotBlank
     private String email;
+
+    private Long storeId;
 
     private int schoolId;
     private LocalDateTime createdAt;
