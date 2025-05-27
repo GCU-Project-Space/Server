@@ -45,9 +45,8 @@ public class MenuService {
         Menu menu = menuMapper.toEntity(dto);
         menu.setStore(store);
 
-        // 4. 먼저 Menu 저장해서 menu.id 생성
+        // 4. Menu 저장
         menu = menuRepository.save(menu);
-
     }
 
 

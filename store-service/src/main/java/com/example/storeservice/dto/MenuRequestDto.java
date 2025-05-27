@@ -19,9 +19,9 @@ public class MenuRequestDto {
     private String name;
 
     @Schema(description = "메뉴 가격 (원)", example = "7500")
-    @NotBlank(message = "가격은 필수입니다.")
+    @NotNull(message = "가격은 필수입니다.")
     @Min(value = 0, message = "가격은 0원 이상이어야 합니다.")
-    private int price;
+    private Integer price;
 
     @Schema(description = "메뉴 설명", example = "고소하고 담백한 참치마요 덮밥")
     @NotBlank(message = "메뉴 설명은 필수입니다.")
@@ -33,7 +33,4 @@ public class MenuRequestDto {
     )
     private Map<String, List<String>> options;
 
-    @Schema(description = "메뉴 이미지 URL", example = "https://cdn.example.com/images/menu1.jpg")
-    private String imageUrl;
 }
-

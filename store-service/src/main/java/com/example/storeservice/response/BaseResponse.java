@@ -23,15 +23,14 @@ public class BaseResponse<T> {
     
 
     public static <T> BaseResponse<T> success(T data) {
-        return new BaseResponse<T>(true, 1000, "요청에 성공했습니다.", data);
+        return new BaseResponse<T>(true, 200, "성공", data);
     }
 
-    public static BaseResponse<Object> fail(ErrorCode errorCode) {
-        return new BaseResponse<>(
-                errorCode.isSuccess(),
-                errorCode.getCode(),
-                errorCode.getMessage(),
-                null
-        );
+    public static <T> BaseResponse<T> fail(ErrorCode errorCode) {
+        return new BaseResponse<>(false, errorCode.getCode(), errorCode.getMessage(), null);
+    }
+
+    public static <T> BaseResponse<T> fail(ErrorCode errorCode, String message) {
+        return new BaseResponse<>(false, errorCode.getCode(), message, null);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.storeservice.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class MenuPartialUpdateDto {
     private String name;
 
     @Schema(description = "메뉴 가격", example = "8500")
+    @Min(value = 0, message = "가격은 0원 이상이어야 합니다.")
     private Integer price;
 
     @Schema(description = "메뉴 설명", example = "매콤한 신메뉴 짜장면")
