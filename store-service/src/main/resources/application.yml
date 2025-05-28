@@ -1,0 +1,30 @@
+spring:
+
+  application:
+    name: store-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/store_service?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 411l1580!
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  doc:
+    api-docs:
+      path: /api-docs
+
+user:
+  service:
+    url: http://localhost:9999  # 또는 mock 주소
+
+server:
+  error:
+    include-exception: false
+    include-stacktrace: never
