@@ -1,9 +1,4 @@
-server:
-  port: 8000
-
 spring:
-  application:
-    name: GATEWAY-SERVICE
   cloud:
     gateway:
       routes:
@@ -20,18 +15,14 @@ spring:
         - id: USER-SERVICE
           predicates:
             - Path=/api/v1/users/**
+          uri: lb://USER-SERVICE
 
         - id: STORE-SERVICE
           predicates:
             - Path=/api/v1/stores/**
+          uri: lb://STORE-SERVICE
 
         - id: RECRUITMENT-SERVICE
           predicates:
             - Path=/api/v1/recruitments/**
-
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://3.36.183.156:8761/eureka
-
+          uri: lb://RECRUITMENT-SERVICE
