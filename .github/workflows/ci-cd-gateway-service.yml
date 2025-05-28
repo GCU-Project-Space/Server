@@ -82,16 +82,6 @@ jobs:
     environment: gateway
 
     steps:
-
-    - name: 3. docker-compose.yml 전달
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_SSH_USER }}
-        key: ${{ env.PRIVATE_KEY }}
-        source: "${{ github.workspace }}/docker-compose.yml"  # 절대 경로 형태
-        target: ${{env.PROJECT_PATH}}
-
     - name: Deploy to EC2 via SSH
       uses: appleboy/ssh-action@v0.1.6
       with:
