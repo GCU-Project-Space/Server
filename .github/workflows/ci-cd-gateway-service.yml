@@ -8,8 +8,8 @@ on:
 
 env:
   SERVICE_NAME: gateway   # 예: order-service
-  EUREKA_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/eureka:latest
-  GATEWAY_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/gateway:latest
+  EUREKA_IMAGE: eedoy/eureka:latest
+  GATEWAY_IMAGE: eedoy/gateway:latest
   EC2_HOST: ${{ secrets.EC2_GATE_HOST }}
   EC2_SSH_USER: ubuntu
   PRIVATE_KEY: ${{ secrets.EC2_GATE_SSH_PRIVATE_KEY }}
