@@ -1,0 +1,78 @@
+package gcu.web.paymentservice.platform.adapter.out.pg.toss;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import gcu.web.paymentservice.platform.adapter.in.web.dto.request.ConfirmPaymentRequest;
+import gcu.web.paymentservice.platform.application.out.pg.PaymentExternalPort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+@Component
+@RequiredArgsConstructor
+public class TossPaymentAdapter implements PaymentExternalPort {
+
+    private final ObjectMapper objectMapper;
+
+    String widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
+    Base64.Encoder encoder = Base64.getEncoder();
+    byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
+    String authorizations = "Basic " + new String(encodedBytes);
+
+
+    /// 결제 요청
+    @Override
+    public HttpResponse<String> requestConfirm(ConfirmPaymentRequest confirmPaymentRequest) throws IOException, InterruptedException {
+        String tossOrderId = confirmPaymentRequest.orderId();
+        int tossAmount = confirmPaymentRequest.amount();
+        String tossPaymentKey = confirmPaymentRequest.paymentKey();
+
+        // 승인 요청에 사용할 JSON 객체를 만듭니다.
+        JsonNode requestObj = objectMapper.createObjectNode()
+                .put("paymentKey", tossPaymentKey)
+                .put("orderId", tossOrderId)
+                .put("amount", tossAmount);
+
+        // ObjectMapper를 사용하여 JSON 객체를 문자열로 변환
+        String requestBody = objectMapper.writeValueAsString(requestObj);
+
+        // 결제 승인 API를 호출
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.tosspayments.com/v1/payments/confirm"))
+                .header("Authorization", authorizations)
+                .header("Content-Type", "application/json")
+                .method("POST", HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+//        log.info("Authorization : " + authorizations);
+        return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+    }
+
+    /// 결제 취소 요청
+    public HttpResponse<String> requestPaymentCancel(String paymentKey, String cancelReason) throws IOException, InterruptedException {
+        System.out.println(paymentKey);
+
+        // 승인 요청에 사용할 JSON 객체 생성
+        JsonNode requestObj = objectMapper.createObjectNode()
+                .put("cancelReason", cancelReason);  // paymentKey는 URL에 포함되어 있으므로 요청 바디에 포함할 필요 없음
+
+        String requestBody = objectMapper.writeValueAsString(requestObj);  // JSON 문자열로 변환
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.tosspayments.com/v1/payments/" + paymentKey + "/cancel"))
+                .header("Authorization", authorizations)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+        return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+}
