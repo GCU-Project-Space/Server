@@ -1,0 +1,98 @@
+name: 유레카 및 게이트웨이 전용 파이프라인
+
+on:
+  push:
+    branches: [ "main", "gateway-service/main" ]
+  pull_request:
+    branches: [ "main", "gateway-service/main" ]
+
+env:
+  SERVICE_NAME: gateway   # 예: order-service
+  EUREKA_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/eureka:latest
+  GATEWAY_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/gateway:latest
+  EC2_HOST: ${{ secrets.EC2_GATE_HOST }}
+  EC2_SSH_USER: ubuntu
+  PRIVATE_KEY: ${{ secrets.EC2_GATE_SSH_PRIVATE_KEY }}
+  TIMEZONE: Asia/Seoul
+  DOCKER_USERNAME: eedoy
+  DOCKER_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  PROJECT_PATH: /home/ubuntu/app/ # 예: /home/ec2-user/delivery-system/order-service
+  APPLICATION: ${{ secrets.APPLICATION }}
+  
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    environment: gateway
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+      
+      # 4. gradle 환경 설치
+    - name: Gradle Wrapper 권한 부여
+      run: chmod +x gradlew
+
+    - name: Build Eureka
+      working-directory: ./eureka
+      run: ./gradlew clean build
+
+    - name: Build Gateway
+      working-directory: ./gateway
+      run: ./gradlew clean build
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ env.DOCKER_USERNAME }}
+        password: ${{ env.DOCKER_TOKEN }}
+
+    - name: Build 유레카 Docker Image
+      working-directory: ./eureka
+      run: docker build -t ${{ env.EUREKA_IMAGE }} .
+
+    - name: Build 게이트웨이 Docker Image
+      working-directory: ./gateway
+      run: docker build -t ${{ env.GATEWAY_IMAGE }} .
+
+    - name: Push Docker Image
+      working-directory: ./eureka
+      run: docker push ${{ env.EUREKA_IMAGE }}
+
+    - name: Push Docker Image
+      working-directory: ./gateway
+      run: docker push ${{ env.GATEWAY_IMAGE }}
+
+  deploy-to-ec2:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: build-and-push
+    environment: gateway
+
+    steps:
+
+    - name: 3. docker-compose.yml 전달
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_SSH_USER }}
+        key: ${{ env.PRIVATE_KEY }}
+        source: "./docker-compose.yml"
+        target: ${{env.PROJECT_PATH}}
+
+    - name: Deploy to EC2 via SSH
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_SSH_USER }}
+        key: ${{ env.PRIVATE_KEY }}
+        script: |
+          cd ${{ env.PROJECT_PATH }}
+          sudo docker compose pull
+          sudo docker compose down
+          sudo docker compose up -d
