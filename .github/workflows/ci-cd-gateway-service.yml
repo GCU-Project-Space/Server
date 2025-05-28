@@ -89,7 +89,7 @@ jobs:
         host: ${{ env.EC2_HOST }}
         username: ${{ env.EC2_SSH_USER }}
         key: ${{ env.PRIVATE_KEY }}
-        source: "./docker-compose.yml"
+        source: "${{ github.workspace }}/docker-compose.yml"  # 절대 경로 형태
         target: ${{env.PROJECT_PATH}}
 
     - name: Deploy to EC2 via SSH
