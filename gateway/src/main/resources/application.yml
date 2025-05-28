@@ -11,10 +11,24 @@ spring:
           predicates:
             - Path=/api/v1/orders/**
           uri: lb://ORDER-SERVICE
+
         - id: PAYMENT-SERVER
           predicates:
             - Path=/api/v1/payments/**
           uri: lb://PAYMENT-SERVER
+
+        - id: USER-SERVICE
+          predicates:
+            - Path=/api/v1/users/**
+
+        - id: STORE-SERVICE
+          predicates:
+            - Path=/api/v1/stores/**
+
+        - id: RECRUITMENT-SERVICE
+          predicates:
+            - Path=/api/v1/recruitments/**
+
 
 eureka:
   client:
