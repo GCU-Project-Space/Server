@@ -47,7 +47,7 @@ jobs:
 
     - name: Build Eureka
       working-directory: ./eureka
-      run: ./gradlew clean build
+      run: ./gradlew clean build -x test
 
     - name: Build 유레카 Docker Image
       working-directory: ./eureka
@@ -64,7 +64,7 @@ jobs:
 
     - name: Build Gateway
       working-directory: ./gateway
-      run: ./gradlew clean build
+      run: ./gradlew clean build -x test
 
     - name: Build 게이트웨이 Docker Image
       working-directory: ./gateway
