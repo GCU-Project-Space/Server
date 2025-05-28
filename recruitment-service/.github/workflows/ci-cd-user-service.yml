@@ -2,26 +2,25 @@ name: CI/CD for Spring Boot + MySQL with Docker Compose
 
 on:
   push:
-    branches: [ "main", "recruitment-service/main" ]
+    branches: [ "main", "user-service/main" ]
   pull_request:
-    branches: [ "main", "recruitment-service/main" ]
+    branches: [ "main", "user-service/main" ]
 
 env:
-  SERVICE_NAME: recruitment-service   # 예: order-service
+  SERVICE_NAME: user-service   # 예: order-service
   DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.DOCKER_IMAGE_NAME }}:latest
   EC2_HOST: ${{ secrets.EC2_HOST }}
-  EC2_SSH_USER: kmj02dev
+  EC2_SSH_USER: ec2-user
   PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
   TIMEZONE: Asia/Seoul
   DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKER_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-  PROJECT_PATH: /home/kmj02dev/delivery-system/recruitment-service # 예: /home/ec2-user/delivery-system/order-service
-  APPLICATION: ${{ secrets.APPLICATION }}
+  PROJECT_PATH: /home/ec2-user/delivery-system/user-service # 예: /home/ec2-user/delivery-system/order-service
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    environment: recruitment-service
+    environment: user-service
 
     steps:
     - name: Checkout
@@ -33,11 +32,6 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Set up application.properties
-      run: |
-        mkdir -p "${{ env.SERVICE_NAME }}"/src/main/resources
-        echo "${{ env.APPLICATION }}" > "${{ env.SERVICE_NAME }}/src/main/resources/application.properties"
-      
     - name: Grant execute permission for gradlew
       run: chmod +x ${{ env.SERVICE_NAME }}/gradlew
 
@@ -61,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     needs: build-and-push
-    environment: recruitment-service
+    environment: user-service
 
     steps:
     - name: Deploy to EC2 via SSH
