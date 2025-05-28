@@ -1,7 +1,7 @@
 spring:
 
   application:
-    name: store-service
+    name: STORE-SERVICE
 
   datasource:
     url: jdbc:mysql://localhost:3306/store_service?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
@@ -28,3 +28,10 @@ server:
   error:
     include-exception: false
     include-stacktrace: never
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://3.36.183.156:8761/eureka
