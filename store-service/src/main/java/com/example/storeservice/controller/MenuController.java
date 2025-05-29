@@ -33,7 +33,7 @@ public class MenuController {
     public ResponseEntity<BaseResponse<Void>> updateMenuPartially(
             @PathVariable Long storeId,
             @PathVariable Long menuId,
-            @RequestBody MenuPartialUpdateDto updateDto) {
+            @RequestBody @Valid MenuPartialUpdateDto updateDto) {
         menuService.updateMenuPartially(menuId, updateDto);
         return ResponseEntity.ok(BaseResponse.success(null));
     }
