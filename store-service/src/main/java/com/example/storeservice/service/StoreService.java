@@ -10,6 +10,9 @@ import com.example.storeservice.dto.StoreUpdateDto;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.storeservice.exception.CustomException;
 import com.example.storeservice.exception.ErrorCode;
+import com.example.storeservice.dto.StoreResponseDto;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -80,7 +83,7 @@ public class StoreService {
         }
     }
 
-
+    // 가게 삭제
     @Transactional
     public void deleteStore(Long storeId) {
         Store store = storeRepository.findById(storeId)
@@ -88,5 +91,20 @@ public class StoreService {
         storeRepository.delete(store);
     }
 
+    // 가게 조회
+    @Transactional(readOnly = true)
+    public StoreResponseDto getStoreById(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
+        return storeMapper.toResponseDto(store);
+    }
 
+    // 전체 가게 조회
+    @Transactional(readOnly = true)
+    public List<StoreResponseDto> getAllStores() {
+        List<Store> stores = storeRepository.findAll();
+        return stores.stream()
+            .map(storeMapper::toResponseDto)
+            .collect(Collectors.toList());
+    }
 }
