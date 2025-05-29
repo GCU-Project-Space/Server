@@ -8,7 +8,6 @@ on:
 
 env:
   SERVICE_NAME: gateway   # 예: order-service
-  EUREKA_IMAGE: eedoy/eureka:latest
   GATEWAY_IMAGE: eedoy/gateway:latest
   EC2_HOST: ${{ secrets.EC2_GATE_HOST }}
   EC2_SSH_USER: ubuntu
@@ -39,23 +38,6 @@ jobs:
       with:
         username: ${{ env.DOCKER_USERNAME }}
         password: ${{ env.DOCKER_TOKEN }}
-
-      # 4. gradle 환경 설치
-    - name: Eureka Gradle Wrapper 권한 부여
-      working-directory: ./eureka
-      run: chmod +x gradlew
-
-    - name: Build Eureka
-      working-directory: ./eureka
-      run: ./gradlew clean build -x test
-
-    - name: Build 유레카 Docker Image
-      working-directory: ./eureka
-      run: docker build -t ${{ env.EUREKA_IMAGE }} .
-
-    - name: Push Docker Image
-      working-directory: ./eureka
-      run: docker push ${{ env.EUREKA_IMAGE }}
 
       # 4. gradle 환경 설치
     - name: Eureka Gradle Wrapper 권한 부여
