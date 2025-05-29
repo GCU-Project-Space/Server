@@ -29,4 +29,7 @@ public class Menu {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
+
+    @OneToOne(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    private MenuDiscount menuDiscount;
 }
