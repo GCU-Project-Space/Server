@@ -19,6 +19,8 @@ springdoc:
     tags-sorter: alpha # 태그 정렬 순서.
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     register-with-eureka: true
     fetch-registry: true
