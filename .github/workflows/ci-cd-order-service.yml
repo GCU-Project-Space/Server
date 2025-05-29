@@ -2,7 +2,7 @@ name: CI/CD for Spring Boot + MySQL with Docker Compose
 
 on:
   push:
-    branches: [ "main", "order-service/main" ]
+    branches: [ "main", "order-service/main","gateway-service/main" ]
   pull_request:
     branches: [ "main", "order-service/main" ]
 
