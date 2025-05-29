@@ -15,10 +15,3 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-  eureka:
-    client:
-      register-with-eureka: true
-      fetch-registry: true
-      service-url:
-        defaultZone: http://3.36.183.156:8761/eureka

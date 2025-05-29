@@ -11,31 +11,24 @@ spring:
         - id: ORDER-SERVICE
           predicates:
             - Path=/api/v1/orders/**
-          uri: lb://ORDER-SERVICE
+          uri: http://54.66.149.225:8100
 
-        - id: PAYMENT-SERVER
+        - id: PAYMENT-SERVICE
           predicates:
             - Path=/api/v1/payments/**
-          uri: lb://PAYMENT-SERVER
+          uri: http://34.127.7.212:8101
 
         - id: USER-SERVICE
           predicates:
             - Path=/api/v1/users/**
-          uri: lb://USER-SERVICE
+          uri: http://54.66.149.225:8104
 
         - id: STORE-SERVICE
           predicates:
             - Path=/api/v1/stores/**
-          uri: lb://STORE-SERVICE
+          uri: http://54.66.149.225:8103
 
         - id: RECRUITMENT-SERVICE
           predicates:
             - Path=/api/v1/recruitments/**
-          uri: lb://RECRUITMENT-SERVICE
-
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://eureka:8761/eureka/
+          uri: http://34.127.7.212:8102
