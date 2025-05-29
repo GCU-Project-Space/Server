@@ -2,6 +2,8 @@ package com.example.storeservice.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -16,7 +18,11 @@ public class Store {
     private String location;
     private String description;
     private String openHours;
+    @Column(nullable = false)
     private int minOrderPrice;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Menu> menus = new ArrayList<>();
 
     public Long getId() { return id; }
     public String getName() { return name; }
