@@ -51,10 +51,6 @@ dependencies {
 
 	/// 스웨거
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
-
-	/// 유레카
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
 	/// Open
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.2.0'
 

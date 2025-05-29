@@ -1,4 +1,4 @@
-name: CI/CD for Spring Boot + MySQL with Docker Compose
+name: 게이트웨이 오더 서비스 파이프라인
 
 on:
   push:
