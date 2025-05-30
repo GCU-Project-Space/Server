@@ -20,6 +20,10 @@ public class Store {
     private String openHours;
     @Column(nullable = false)
     private int minOrderPrice;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Menu> menus = new ArrayList<>();
@@ -31,6 +35,7 @@ public class Store {
     public String getDescription() { return description; }
     public String getOpenHours() { return openHours; }
     public int getMinOrderPrice() { return minOrderPrice; }
+    public Category getCategory() { return category; }
 
     public void setName(String name) { this.name = name; }
     public void setPhone(String phone) { this.phone = phone; }
@@ -38,4 +43,5 @@ public class Store {
     public void setDescription(String description) { this.description = description; }
     public void setOpenHours(String openHours) { this.openHours = openHours; }
     public void setMinOrderPrice(int minOrderPrice) { this.minOrderPrice = minOrderPrice; }
+    public void setCategory(Category category) { this.category = category; }
 }

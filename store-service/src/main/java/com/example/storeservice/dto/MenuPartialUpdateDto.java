@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -24,9 +23,17 @@ public class MenuPartialUpdateDto {
     @Schema(description = "메뉴 설명", example = "매콤한 신메뉴 짜장면")
     private String description;
 
-    @Schema(description = "메뉴 옵션", example = "{\"맛\": [\"순한맛\", \"매운맛\"]}")
-    private Map<String, List<String>> options;
+    @Schema(description = "메뉴 옵션", example = "[{\"id\": \"1\", \"name\": \"곱빼기\", \"price\": 2000}, {\"id\": \"2\", \"name\": \"매운맛\", \"price\": 1000}]")
+    private List<OptionInfo> options;
 
     @Schema(description = "이미지 URL", example = "https://cdn.example.com/menu.jpg")
     private String imageUrl;
+
+    @Getter @Setter
+    @NoArgsConstructor
+    public static class OptionInfo {
+        private String id;
+        private String name;
+        private Integer price;
+    }
 }

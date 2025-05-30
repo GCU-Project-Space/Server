@@ -1,5 +1,6 @@
 package com.example.storeservice.dto;
 
+import com.example.storeservice.entity.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
@@ -34,4 +35,8 @@ public class StoreRequestDto {
     @Schema(description = "최소 주문 금액", example = "10000", required = true)
     @Min(value = 0, message = "최소 주문 금액은 0 이상이어야 합니다.")
     private int minOrderPrice;
+
+    @Schema(description = "가게 카테고리", example = "KOREAN", required = true)
+    @NotNull(message = "카테고리는 필수입니다.")
+    private Category category;
 }

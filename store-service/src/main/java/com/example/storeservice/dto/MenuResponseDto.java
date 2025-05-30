@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -20,5 +19,13 @@ public class MenuResponseDto {
     private Integer discountedPrice;   // 할인 적용된 가격 (예: 8000)
 
     private String imageUrl;
-    private Map<String, List<String>> options;
+    private List<OptionInfo> options;
+
+    @Getter @Setter
+    @NoArgsConstructor
+    public static class OptionInfo {
+        private String id;
+        private String name;
+        private Integer price;
+    }
 }

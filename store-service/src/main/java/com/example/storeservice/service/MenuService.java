@@ -1,7 +1,7 @@
 package com.example.storeservice.service;
 
 import com.example.storeservice.dto.MenuRequestDto;
-import com.example.storeservice.dto.MenuPartialUpdateDto;
+import com.example.storeservice.dto.MenuResponseDto;
 import com.example.storeservice.entity.Menu;
 import com.example.storeservice.entity.Store;
 import com.example.storeservice.exception.CustomException;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.example.storeservice.dto.MenuResponseDto;
+import com.example.storeservice.dto.MenuPartialUpdateDto;
 import com.example.storeservice.repository.MenuDiscountRepository;
-
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -45,10 +45,12 @@ public class MenuService {
         Menu menu = menuMapper.toEntity(dto);
         menu.setStore(store);
 
+        if (dto.getOptions() == null) {
+            menu.setOptions(new ArrayList<>());
+        }
         // 4. Menu 저장
         menu = menuRepository.save(menu);
     }
-
 
     /**
      * 메뉴 부분 수정
@@ -76,7 +78,7 @@ public class MenuService {
         }
 
         if (dto.getOptions() != null) {
-            menu.setOptions(dto.getOptions());
+            menu.setOptions(menuMapper.mapOptionInfoList(dto.getOptions()));
         }
 
         if (dto.getImageUrl() != null && !dto.getImageUrl().isBlank()) {
@@ -108,13 +110,11 @@ public class MenuService {
         menuRepository.deleteAll(menus);
     }
 
-
     /**
      * 메뉴 전체 불러오기
      */
     @Transactional(readOnly = true)
     public List<MenuResponseDto> getMenusByStoreId(Long storeId) {
-        
         Store store = storeRepository.findById(storeId)
             .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
 
@@ -134,5 +134,4 @@ public class MenuService {
             })
             .collect(Collectors.toList());
     }
-
 }
