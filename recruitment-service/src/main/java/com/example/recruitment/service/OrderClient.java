@@ -1,7 +1,6 @@
 package com.example.recruitment.service;
 
 import com.example.recruitment.dto.order.OrderRequestDto;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -13,11 +12,9 @@ public class OrderClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${order.server.url}")
-    private String serverUrl;
-
-    @Value("${order.server.path}")
-    private String path;
+    //직접 값 선언
+    private final String serverUrl = "http://54.66.149.225:8100";
+    private final String path = "/api/v1/orders";
 
     public Long createOrder(OrderRequestDto requestDto) {
         String fullUrl = serverUrl + path;
@@ -34,6 +31,7 @@ public class OrderClient {
                     return Long.valueOf(data.get("orderId").toString());
                 }
             }
+
             throw new RuntimeException("응답에 orderId 없음");
         }
 
