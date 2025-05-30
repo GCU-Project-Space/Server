@@ -40,10 +40,8 @@ public class GlobalExceptionHandler {
         String path = request.getRequestURI();
 
         if (path != null && (path.contains("/v3/api-docs") || path.contains("/swagger"))) {
-    throw e; // Swagger 요청은 예외 처리하지 않고 Spring에게 맡김
+                throw e; // Swagger 요청은 예외 처리하지 않고 Spring에게 맡김
 }
-
-
 
         return ResponseEntity
                 .status(ErrorCode.INTERNAL_ERROR.getStatus())
