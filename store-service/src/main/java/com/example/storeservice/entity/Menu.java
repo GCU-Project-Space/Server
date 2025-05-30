@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 @Entity
 @Getter @Setter
@@ -21,8 +20,10 @@ public class Menu {
     private String description;
 
     @ElementCollection
-    private Map<String, List<String>> options = new HashMap<>();
-
+    @CollectionTable(name = "menu_options", joinColumns = @JoinColumn(name = "menu_id"))
+    @OrderColumn(name = "options_index")
+    private List<OptionInfo> options = new ArrayList<>();
+    
 
     private String imageUrl;
 
@@ -32,4 +33,13 @@ public class Menu {
 
     @OneToOne(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     private MenuDiscount menuDiscount;
+
+    @Embeddable
+    @Getter @Setter
+    @NoArgsConstructor
+    public static class OptionInfo {
+        private String id;
+        private String name;
+        private Integer price;
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.storeservice.dto;
 
+import com.example.storeservice.entity.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,4 +28,7 @@ public class StoreUpdateDto {
 
     @Schema(description = "최소 주문 금액", example = "15000")
     private Integer minOrderPrice;
+
+    @Schema(description = "가게 카테고리", example = "KOREAN")
+    private Category category;
 }

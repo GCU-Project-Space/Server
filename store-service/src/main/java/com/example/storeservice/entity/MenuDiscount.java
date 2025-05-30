@@ -15,10 +15,11 @@ public class MenuDiscount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
 
     @Column(nullable = false)
-    private int discountRate;  // ex: 20 (20%)
+    private int discountRate;
 }
+

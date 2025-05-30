@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.List;
-import java.util.Map;
-
 
 @Getter
 @Setter
@@ -29,8 +27,27 @@ public class MenuRequestDto {
 
     @Schema(
         description = "메뉴 옵션",
-        example = "{\"맛\": [\"순한맛\", \"매운맛\"], \"사이즈\": [\"보통\", \"곱빼기\"]}"
+        example = "[{\"id\": \"1\", \"name\": \"곱빼기\", \"price\": 2000}, {\"id\": \"2\", \"name\": \"매운맛\", \"price\": 1000}]"
     )
-    private Map<String, List<String>> options;
+    private List<OptionInfo> options;
 
+    @Schema(description = "이미지 URL", example = "https://example.com/image.jpg")
+    private String imageUrl;
+
+    @Getter @Setter
+    @NoArgsConstructor
+    public static class OptionInfo {
+        @Schema(description = "옵션 ID", example = "1")
+        @NotBlank(message = "옵션 ID는 필수입니다.")
+        private String id;
+
+        @Schema(description = "옵션 이름", example = "곱빼기")
+        @NotBlank(message = "옵션 이름은 필수입니다.")
+        private String name;
+
+        @Schema(description = "옵션 가격", example = "2000")
+        @NotNull(message = "옵션 가격은 필수입니다.")
+        @Min(value = 0, message = "옵션 가격은 0원 이상이어야 합니다.")
+        private Integer price;
+    }
 }
