@@ -3,7 +3,7 @@ name: 게이트웨이 결제 서비스 파이프라인
 
 on:
   push:
-    branches: [ "main", "payment-service/main","gateway-service/main" ]
+    branches: [ "main", "payment-service/main"]
   pull_request:
     branches: [ "main", "payment-service/main" ]
 

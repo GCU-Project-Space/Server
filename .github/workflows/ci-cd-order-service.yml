@@ -2,7 +2,7 @@ name: 게이트웨이 오더 서비스 파이프라인
 
 on:
   push:
-    branches: [ "main", "order-service/main","gateway-service/main" ]
+    branches: [ "main", "order-service/main"]
   pull_request:
     branches: [ "main", "order-service/main" ]
 
