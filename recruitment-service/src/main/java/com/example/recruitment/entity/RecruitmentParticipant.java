@@ -26,5 +26,8 @@ public class RecruitmentParticipant {
 
     @Column(name = "joined_at", nullable = false)
     private LocalDateTime joinedAt;
+
+    @Column(name = "order_id")
+    private Long orderId;
 }
 

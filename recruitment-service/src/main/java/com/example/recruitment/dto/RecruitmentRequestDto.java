@@ -1,13 +1,14 @@
 package com.example.recruitment.dto;
 
+import com.example.recruitment.dto.order.OrderRequestDto;
+import lombok.Getter;
+import lombok.Setter;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import java.time.LocalDateTime;
-
-import lombok.Getter;
-import lombok.Setter;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,25 +28,19 @@ public class RecruitmentRequestDto {
 
     @NotNull(message = "마감 시간은 필수입니다.")
     private LocalDateTime deadlineTime;
+
+    @NotBlank(message = "카테고리는 비어 있을 수 없습니다.")
+    private String category;
+
+    // 주문용 메뉴 정보
+    private List<OrderRequestDto.MenuDto> menus;
+
+    //OrderRequestDto 변환 메서드
+    public OrderRequestDto toOrderRequestDto() {
+        OrderRequestDto dto = new OrderRequestDto();
+        dto.setUserId(this.userId);
+        dto.setStoreId(this.storeId);
+        dto.setMenus(this.menus);
+        return dto;
+    }
 }
-
-
-
-//원래 dto 코드
-/*
- * package com.example.recruitment.dto;
-
-import java.time.LocalDateTime;
-
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter @Setter
-public class RecruitmentRequestDto {
-    private Long userId;
-    private Long storeId;
-    private String title;
-    private String description;
-    private LocalDateTime deadlineTime;
-}
- */

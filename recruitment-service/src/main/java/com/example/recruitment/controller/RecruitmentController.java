@@ -2,15 +2,13 @@ package com.example.recruitment.controller;
 
 import com.example.recruitment.dto.RecruitmentDetailDto;
 import com.example.recruitment.dto.RecruitmentRequestDto;
+import com.example.recruitment.dto.order.OrderRequestDto;
 import com.example.recruitment.entity.Recruitment;
 import com.example.recruitment.entity.RecruitmentParticipant;
-import com.example.recruitment.entity.Store;
 import com.example.recruitment.entity.User;
 import com.example.recruitment.repository.RecruitmentParticipantRepository;
 import com.example.recruitment.repository.RecruitmentRepository;
-import com.example.recruitment.repository.StoreRepository;
-import com.example.recruitment.repository.UserRepository;
-
+import com.example.recruitment.service.RecruitmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,29 +19,27 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/recruitments")
+@RequestMapping("/api/v1/recruitments")
 public class RecruitmentController {
 
+    private final RecruitmentService recruitmentService;
     private final RecruitmentRepository recruitmentRepository;
-    private final UserRepository userRepository;
-    private final StoreRepository storeRepository;
     private final RecruitmentParticipantRepository participantRepository;
 
-    // 모집글 생성
+    //모집글 생성 (Order 서버에 주문 생성 포함)
     @PostMapping
-    public Recruitment createRecruitment(@Valid @RequestBody RecruitmentRequestDto dto) {
-        User user = userRepository.findById(dto.getUserId()).orElseThrow();
-        Store store = storeRepository.findById(dto.getStoreId()).orElseThrow();
+    public ResponseEntity<?> createRecruitment(@Valid @RequestBody RecruitmentRequestDto dto) {
+        recruitmentService.createRecruitment(dto);
+        return ResponseEntity.ok("모집글 생성 완료");
+    }
 
-        Recruitment recruitment = new Recruitment();
-        recruitment.setUser(user);
-        recruitment.setStore(store);
-        recruitment.setTitle(dto.getTitle());
-        recruitment.setDescription(dto.getDescription());
-        recruitment.setDeadlineTime(dto.getDeadlineTime());
-        recruitment.setStatus("RECRUITING");
-
-        return recruitmentRepository.save(recruitment);
+    //모집글 참여 (Order 서버에 주문 생성 포함)
+    @PostMapping("/{recruitmentId}/join")
+    public ResponseEntity<?> joinRecruitment(@PathVariable Long recruitmentId,
+                                             @RequestParam Long userId,
+                                             @RequestBody OrderRequestDto orderRequestDto) {
+        recruitmentService.joinRecruitment(recruitmentId, userId, orderRequestDto);
+        return ResponseEntity.ok("모집글 참여 완료");
     }
 
     // 모집글 전체 조회
@@ -52,84 +48,56 @@ public class RecruitmentController {
         return recruitmentRepository.findAll();
     }
 
-    // 상태별 조회 (ex. /api/recruitments?status=RECRUITING)
+    // 상태별 조회
     @GetMapping(params = "status")
     public List<Recruitment> getByStatus(@RequestParam String status) {
         return recruitmentRepository.findByStatus(status);
     }
 
+    // 모집글 상세 조회
     @GetMapping("/{recruitmentId}")
-public ResponseEntity<?> getRecruitmentDetail(@PathVariable Long recruitmentId) {
-    Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElseThrow();
-
-    // 참여자 목록 조회
-    List<RecruitmentParticipant> participantEntities =
-            participantRepository.findByRecruitmentId(recruitmentId);
-
-    List<User> participants = participantEntities.stream()
-            .map(RecruitmentParticipant::getUser)
-            .toList();
-
-    // DTO 구성
-    RecruitmentDetailDto dto = new RecruitmentDetailDto();
-    dto.setId(recruitment.getId());
-    dto.setTitle(recruitment.getTitle());
-    dto.setDescription(recruitment.getDescription());
-    dto.setStatus(recruitment.getStatus());
-    dto.setDeadlineTime(recruitment.getDeadlineTime());
-    dto.setUser(recruitment.getUser());
-    dto.setStore(recruitment.getStore());
-    dto.setParticipants(participants);
-
-    return ResponseEntity.ok(dto);
-}
-
-    @GetMapping("/user/{userId}/created-recruitments")
-public List<Recruitment> getRecruitmentsCreatedByUser(@PathVariable Long userId) {
-    return recruitmentRepository.findByUserId(userId);
-}
-
-// 특정 유저가 참여한 모집글 조회
-    @GetMapping("/user/{userId}/joined-recruitments")
-public List<Recruitment> getRecruitmentsJoinedByUser(@PathVariable Long userId) {
-    List<RecruitmentParticipant> participantList = participantRepository.findByUserId(userId);
-    return participantList.stream()
-            .map(RecruitmentParticipant::getRecruitment)
-            .toList();
-}
-
-
-
-
-    // 모집글 참여
-    @PostMapping("/{recruitmentId}/join")
-    public ResponseEntity<?> joinRecruitment(@PathVariable Long recruitmentId, @RequestParam Long userId) {
-        User user = userRepository.findById(userId).orElseThrow();
+    public ResponseEntity<?> getRecruitmentDetail(@PathVariable Long recruitmentId) {
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElseThrow();
 
-        boolean alreadyJoined = participantRepository
-                .findByUserIdAndRecruitmentId(userId, recruitmentId)
-                .isPresent();
+        List<RecruitmentParticipant> participants =
+                participantRepository.findByRecruitmentId(recruitmentId);
+        List<User> participantUsers = participants.stream()
+                .map(RecruitmentParticipant::getUser)
+                .toList();
 
-        if (alreadyJoined) {
-            return ResponseEntity.badRequest().body("이미 참여한 모집입니다.");
-        }
+        RecruitmentDetailDto dto = new RecruitmentDetailDto();
+        dto.setId(recruitment.getId());
+        dto.setTitle(recruitment.getTitle());
+        dto.setDescription(recruitment.getDescription());
+        dto.setStatus(recruitment.getStatus());
+        dto.setDeadlineTime(recruitment.getDeadlineTime());
+        dto.setUser(recruitment.getUser());
+        dto.setStore(recruitment.getStore());
+        dto.setParticipants(participantUsers);
 
-        RecruitmentParticipant participant = new RecruitmentParticipant();
-        participant.setUser(user);
-        participant.setRecruitment(recruitment);
-        participant.setJoinedAt(LocalDateTime.now());
-
-        participantRepository.save(participant);
-        return ResponseEntity.ok("모집글 참여 완료");
+        return ResponseEntity.ok(dto);
     }
 
-    // 모집 상태 업데이트 (CONFIRMED 또는 FAILED)
+    // 유저가 만든 모집글
+    @GetMapping("/user/{userId}/created-recruitments")
+    public List<Recruitment> getRecruitmentsCreatedByUser(@PathVariable Long userId) {
+        return recruitmentRepository.findByUserId(userId);
+    }
+
+    // 유저가 참여한 모집글
+    @GetMapping("/user/{userId}/joined-recruitments")
+    public List<Recruitment> getRecruitmentsJoinedByUser(@PathVariable Long userId) {
+        List<RecruitmentParticipant> participantList = participantRepository.findByUserId(userId);
+        return participantList.stream()
+                .map(RecruitmentParticipant::getRecruitment)
+                .toList();
+    }
+
+    // 모집 상태 업데이트
     @PatchMapping("/{recruitmentId}/status")
     public ResponseEntity<?> updateRecruitmentStatus(@PathVariable Long recruitmentId) {
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElseThrow();
         LocalDateTime now = LocalDateTime.now();
-
         long participantCount = participantRepository.countByRecruitmentId(recruitmentId);
 
         if (now.isAfter(recruitment.getDeadlineTime())) {
@@ -145,68 +113,56 @@ public List<Recruitment> getRecruitmentsJoinedByUser(@PathVariable Long userId) 
         }
     }
 
-    // 주문 수락 상태로 변경 (ACCEPTED)
+    // 주문 수락 상태 변경
     @PatchMapping("/{recruitmentId}/accept")
     public ResponseEntity<?> acceptRecruitment(@PathVariable Long recruitmentId) {
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElseThrow();
-
         if (!"CONFIRMED".equals(recruitment.getStatus())) {
             return ResponseEntity.badRequest().body("주문 수락은 CONFIRMED 상태에서만 가능합니다.");
         }
-
         recruitment.setStatus("ACCEPTED");
         recruitmentRepository.save(recruitment);
-
         return ResponseEntity.ok("상태가 ACCEPTED로 변경되었습니다.");
     }
 
-    // 배달 완료 상태로 변경 (DELIVERED)
+    // 배달 완료 상태 변경
     @PatchMapping("/{recruitmentId}/deliver")
     public ResponseEntity<?> completeDelivery(@PathVariable Long recruitmentId) {
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElseThrow();
-
         if (!"ACCEPTED".equals(recruitment.getStatus())) {
             return ResponseEntity.badRequest().body("배달 완료는 ACCEPTED 상태에서만 가능합니다.");
         }
-
         recruitment.setStatus("DELIVERED");
         recruitmentRepository.save(recruitment);
-
         return ResponseEntity.ok("상태가 DELIVERED로 변경되었습니다.");
     }
-// 모집글 삭제
+
+    // 모집글 삭제
     @DeleteMapping("/{recruitmentId}")
-public ResponseEntity<?> deleteRecruitment(@PathVariable Long recruitmentId) {
-    Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElseThrow();
-
-    recruitmentRepository.delete(recruitment);
-    return ResponseEntity.ok("모집글이 삭제되었습니다.");
-}
-
-// 모집글 수정
-@PutMapping("/{recruitmentId}")
-public ResponseEntity<?> updateRecruitment(@PathVariable Long recruitmentId,
-                                            @Valid @RequestBody RecruitmentRequestDto dto) {
-    Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElseThrow();
-
-    // (선택) 본인 작성한 글인지 확인
-    if (!recruitment.getUser().getId().equals(dto.getUserId())) {
-        return ResponseEntity.status(403).body("작성자만 수정할 수 있습니다.");
+    public ResponseEntity<?> deleteRecruitment(@PathVariable Long recruitmentId) {
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElseThrow();
+        recruitmentRepository.delete(recruitment);
+        return ResponseEntity.ok("모집글이 삭제되었습니다.");
     }
 
-    // 수정할 항목들 업데이트
-    recruitment.setTitle(dto.getTitle());
-    recruitment.setDescription(dto.getDescription());
-    recruitment.setDeadlineTime(dto.getDeadlineTime());
+    // 모집글 수정
+    @PutMapping("/{recruitmentId}")
+    public ResponseEntity<?> updateRecruitment(@PathVariable Long recruitmentId,
+                                               @Valid @RequestBody RecruitmentRequestDto dto) {
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId).orElseThrow();
+        if (!recruitment.getUser().getId().equals(dto.getUserId())) {
+            return ResponseEntity.status(403).body("작성자만 수정할 수 있습니다.");
+        }
 
-    // (선택) 가게 변경도 허용
-    if (dto.getStoreId() != null) {
-        Store store = storeRepository.findById(dto.getStoreId()).orElseThrow();
-        recruitment.setStore(store);
+        recruitment.setTitle(dto.getTitle());
+        recruitment.setDescription(dto.getDescription());
+        recruitment.setDeadlineTime(dto.getDeadlineTime());
+
+        if (dto.getStoreId() != null) {
+            recruitment.setStore(recruitment.getStore());
+        }
+
+        recruitmentRepository.save(recruitment);
+        return ResponseEntity.ok("모집글이 수정되었습니다.");
     }
-
-    recruitmentRepository.save(recruitment);
-    return ResponseEntity.ok("모집글이 수정되었습니다.");
-}
-
 }
