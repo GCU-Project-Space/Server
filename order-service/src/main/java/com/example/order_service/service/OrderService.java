@@ -111,6 +111,18 @@ public class OrderService{
         return orderRepository.save(orderEntity).toResponse();
     }
 
+    public void completeOrdersByGroupId(Long groupId) {
+        List<OrderEntity> orderEntities = orderRepository.findByGroupId(groupId);
+        if (orderEntities.isEmpty()) throw new CustomException(ErrorCode.NOT_FOUND);
+
+        orderRepository.saveAll(orderEntities.stream()
+            .map(order -> {
+                order.cancel();
+                return order; 
+            }).collect(Collectors.toList())
+        );
+    }
+
     // Delete
     public void cancelOrder(Long orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId)
