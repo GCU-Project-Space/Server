@@ -2,7 +2,6 @@ package com.example.recruitment.dto;
 
 import com.example.recruitment.entity.Recruitment;
 import com.example.recruitment.entity.Store;
-import com.example.recruitment.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,15 +23,20 @@ public class RecruitmentDetailDto {
     private List<UserDto> participants;
     private List<Long> orderIds;
 
-    public RecruitmentDetailDto(Recruitment recruitment, List<UserDto> participantUsers, List<Long> orderIds) {
+    public RecruitmentDetailDto(
+            Recruitment recruitment,
+            UserDto writer,
+            List<UserDto> participantUsers,
+            List<Long> orderIds
+    ) {
         this.id = recruitment.getId();
         this.title = recruitment.getTitle();
         this.description = recruitment.getDescription();
         this.status = recruitment.getStatus();
         this.deadlineTime = recruitment.getDeadlineTime();
-        this.user = new UserDto(recruitment.getUser());
+        this.user = writer;  // ✅ 유저 서비스로부터 가져온 작성자 정보
         this.store = new StoreDto(recruitment.getStore());
-        this.participants = participantUsers;  // ✅ 이미 변환된 상태로 전달됨
+        this.participants = participantUsers;
         this.orderIds = orderIds;
     }
 
@@ -43,10 +47,10 @@ public class RecruitmentDetailDto {
         private String name;
         private String email;
 
-        public UserDto(User user) {
-            this.id = user.getId();
-            this.name = user.getName();
-            this.email = user.getEmail();
+        public UserDto(Long id, String name, String email) {
+            this.id = id;
+            this.name = name;
+            this.email = email;
         }
     }
 

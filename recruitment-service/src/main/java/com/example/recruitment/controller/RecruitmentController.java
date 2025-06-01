@@ -1,5 +1,6 @@
 package com.example.recruitment.controller;
 
+import com.example.recruitment.service.UserClient;
 import com.example.recruitment.common.ApiResponse;
 import com.example.recruitment.dto.RecruitmentDetailDto;
 import com.example.recruitment.dto.RecruitmentRequestDto;
@@ -33,6 +34,7 @@ public class RecruitmentController {
     private final RecruitmentRepository recruitmentRepository;
     private final RecruitmentParticipantRepository participantRepository;
     private final StoreRepository storeRepository;
+    private final UserClient userClient; // 유저 서비스 연동용 Feign Client
 
     @PostMapping
     public ResponseEntity<ApiResponse<Map<String, Long>>> createRecruitment(@Valid @RequestBody RecruitmentRequestDto dto) {
@@ -73,17 +75,20 @@ public class RecruitmentController {
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
-        List<RecruitmentParticipant> participants = participantRepository.findByRecruitmentId(recruitmentId);
+        // ✅ 작성자 정보 → 유저 서비스에서 가져옴
+        RecruitmentDetailDto.UserDto writer = userClient.getUserById(recruitment.getUser().getId());
 
+        // ✅ 참여자 정보
+        List<RecruitmentParticipant> participants = participantRepository.findByRecruitmentId(recruitmentId);
         List<RecruitmentDetailDto.UserDto> participantUsers = participants.stream()
-                .map(p -> new RecruitmentDetailDto.UserDto(p.getUser()))
+                .map(p -> userClient.getUserById(p.getUser().getId()))
                 .toList();
 
         List<Long> orderIds = participants.stream()
                 .map(RecruitmentParticipant::getOrderId)
                 .toList();
 
-        RecruitmentDetailDto dto = new RecruitmentDetailDto(recruitment, participantUsers, orderIds);
+        RecruitmentDetailDto dto = new RecruitmentDetailDto(recruitment, writer, participantUsers, orderIds);
 
         return ResponseEntity.ok(ApiResponse.ok(dto, "모집 상세 조회 성공"));
     }
