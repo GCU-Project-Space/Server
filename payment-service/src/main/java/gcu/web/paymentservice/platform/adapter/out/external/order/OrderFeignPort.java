@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
-@FeignClient(name = "order-service", url = "http://54.66.149.225:8100")
+@FeignClient(name = "order-service", url = "http://34.127.7.212:8100")
 public interface OrderFeignPort {
 
     /*
