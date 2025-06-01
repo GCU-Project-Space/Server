@@ -12,6 +12,7 @@ import com.example.order_service.common.OrderStatus;
 import com.example.order_service.dto.request.GroupRequest;
 import com.example.order_service.dto.request.OrderRequest;
 import com.example.order_service.dto.response.GroupResponse;
+import com.example.order_service.dto.response.OrderResponse;
 import com.example.order_service.entity.GroupEntity;
 import com.example.order_service.entity.OrderEntity;
 import com.example.order_service.repository.GroupRepository;
@@ -48,9 +49,12 @@ public class GroupService {
         OrderRequest order = request.getGroupOrder().get(0);
         order.setGroupId(savedGroup.getId());
         order.setUserId(request.getLeaderId());
-        orderService.createOrder(order);
-        
-        return savedGroup.toResponse();
+        OrderResponse orderResponse = orderService.createOrder(order);
+
+        GroupResponse groupResponse = savedGroup.toResponse();
+        groupResponse.getOrders().add(orderResponse);
+
+        return groupResponse;
     }
 
     // 그룹 참가 (주문 추가)
