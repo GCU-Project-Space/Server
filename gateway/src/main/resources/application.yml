@@ -11,7 +11,7 @@ spring:
         - id: ORDER-SERVICE
           predicates:
             - Path=/api/v1/orders/**
-          uri: http://54.66.149.225:8100
+          uri: http://34.127.7.212:8100
 
         - id: PAYMENT-SERVICE
           predicates:
@@ -31,7 +31,7 @@ spring:
         - id: RECRUITMENT-SERVICE
           predicates:
             - Path=/api/v1/recruitments/**
-          uri: http://34.127.7.212:8102
+          uri: http://34.127.7.212:8100
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       globalcors:
