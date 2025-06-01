@@ -7,11 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
-public class RecruitmentDetailDto {
+public class RecruitmentResponseDto {
 
     private Long id;
     private String title;
@@ -21,10 +20,8 @@ public class RecruitmentDetailDto {
 
     private UserDto user;
     private StoreDto store;
-    private List<UserDto> participants;
-    private List<Long> orderIds;
 
-    public RecruitmentDetailDto(Recruitment recruitment, List<UserDto> participantUsers, List<Long> orderIds) {
+    public RecruitmentResponseDto(Recruitment recruitment) {
         this.id = recruitment.getId();
         this.title = recruitment.getTitle();
         this.description = recruitment.getDescription();
@@ -32,8 +29,6 @@ public class RecruitmentDetailDto {
         this.deadlineTime = recruitment.getDeadlineTime();
         this.user = new UserDto(recruitment.getUser());
         this.store = new StoreDto(recruitment.getStore());
-        this.participants = participantUsers;  // ✅ 이미 변환된 상태로 전달됨
-        this.orderIds = orderIds;
     }
 
     @Getter

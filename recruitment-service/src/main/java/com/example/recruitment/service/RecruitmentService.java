@@ -22,7 +22,7 @@ public class RecruitmentService {
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
     private final RecruitmentParticipantRepository participantRepository;
-    private final OrderClient orderClient; // 주문 서버와 통신할 client
+    private final OrderClient orderClient;
 
     /**
      * 모집글 생성 시:
@@ -30,14 +30,16 @@ public class RecruitmentService {
      * - 모집글 저장
      * - 주문 서버에 주문 생성 요청
      * - 생성된 orderId를 모집글에 저장
+     * - 모집자도 자동 참여자로 등록
      */
     @Transactional
-    public void createRecruitment(RecruitmentRequestDto dto) {
+    public Long createRecruitment(RecruitmentRequestDto dto) {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
         Store store = storeRepository.findById(dto.getStoreId())
                 .orElseThrow(() -> new RuntimeException("가게 없음"));
 
+        // 모집글 저장
         Recruitment recruitment = new Recruitment();
         recruitment.setUser(user);
         recruitment.setStore(store);
@@ -46,16 +48,25 @@ public class RecruitmentService {
         recruitment.setDeadlineTime(dto.getDeadlineTime());
         recruitment.setStatus("RECRUITING");
         recruitment.setCategory(dto.getCategory());
-        recruitmentRepository.save(recruitment);
+        recruitmentRepository.save(recruitment); // ID 생성됨
 
         // 주문 서버에 주문 생성 요청
         OrderRequestDto orderDto = dto.toOrderRequestDto();
         orderDto.setGroupId(recruitment.getId());
         Long orderId = orderClient.createOrder(orderDto);
 
-        // orderId를 모집글에 저장
+        // 모집글에 orderId 저장
         recruitment.setOrderId(orderId);
         recruitmentRepository.save(recruitment);
+
+        // 모집자도 자동으로 참여자로 등록
+        RecruitmentParticipant participant = new RecruitmentParticipant();
+        participant.setRecruitment(recruitment);
+        participant.setUser(user);
+        participant.setOrderId(orderId);
+        participantRepository.save(participant);
+
+        return recruitment.getId();
     }
 
     /**
@@ -77,12 +88,12 @@ public class RecruitmentService {
             throw new RuntimeException("이미 참여한 모집입니다.");
         }
 
-        // 주문 서버에 주문 생성 요청
+        // 주문 생성
         orderDto.setGroupId(recruitmentId);
         orderDto.setUserId(userId);
         Long orderId = orderClient.createOrder(orderDto);
 
-        // 참여자 등록 + 주문 ID 저장
+        // 참여자 등록
         RecruitmentParticipant participant = new RecruitmentParticipant();
         participant.setRecruitment(recruitment);
         participant.setUser(user);

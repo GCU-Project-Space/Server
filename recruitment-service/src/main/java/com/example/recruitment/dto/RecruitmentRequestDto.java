@@ -33,9 +33,11 @@ public class RecruitmentRequestDto {
     private String category;
 
     // 주문용 메뉴 정보
+    @NotNull(message = "메뉴 정보는 필수입니다.")
+    @Size(min = 1, message = "최소 하나 이상의 메뉴를 선택해야 합니다.")
     private List<OrderRequestDto.MenuDto> menus;
 
-    //OrderRequestDto 변환 메서드
+    // OrderRequestDto 변환 메서드
     public OrderRequestDto toOrderRequestDto() {
         OrderRequestDto dto = new OrderRequestDto();
         dto.setUserId(this.userId);
