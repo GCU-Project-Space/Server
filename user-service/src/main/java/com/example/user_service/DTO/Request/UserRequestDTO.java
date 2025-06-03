@@ -14,4 +14,5 @@ public class UserRequestDTO{
     private String email;
     private int schoolId;
     private String userType;
+    private Long storeId;
 }

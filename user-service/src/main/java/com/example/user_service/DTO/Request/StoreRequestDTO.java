@@ -15,3 +15,4 @@ public class StoreRequestDTO {
     private String imageUrl;
     private String discription;
 }
+
