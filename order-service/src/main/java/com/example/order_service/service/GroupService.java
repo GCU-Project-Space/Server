@@ -99,7 +99,7 @@ public class GroupService {
         if (groups.isEmpty()) throw new CustomException(ErrorCode.NOT_FOUND);
         
         return groups.stream()
-                .filter(group -> group.getStatus() == GroupStatus.SUBMITTED)
+                .filter(group -> group.getStatus() != GroupStatus.RECRUITING)
                 .map(GroupEntity::toResponse)
                 .collect(Collectors.toList());
     }
