@@ -1,10 +1,10 @@
 package com.example.user_service.service;
 
-import com.example.user_service.DTO.Request.StoreRequestDTO;
+// import com.example.user_service.DTO.Request.StoreRequestDTO;
 import com.example.user_service.DTO.Request.UserLoginRequestDTO;
 import com.example.user_service.DTO.Request.UserRequestDTO;
 import com.example.user_service.DTO.Request.UserUpdateRequestDTO;
-import com.example.user_service.DTO.Resposne.StoreResponseDTO;
+// import com.example.user_service.DTO.Resposne.StoreResponseDTO;
 import com.example.user_service.DTO.Resposne.UserResponseDTO;
 import com.example.user_service.entity.User;
 import com.example.user_service.exception.CustomException;
@@ -12,21 +12,21 @@ import com.example.user_service.exception.ErrorCode;
 import com.example.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+// import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+// import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    @Autowired
-    private RestTemplate restTemplate;
+    // @Autowired
+    // private RestTemplate restTemplate;
 
 
     public UserResponseDTO createUser(UserRequestDTO requestDTO) {
@@ -53,16 +53,17 @@ public class UserService {
             .userType(
                 "USER".equals(userType) ? User.UserType.USER : User.UserType.OWNER
             )
+            .storeId(requestDTO.getStoreId())
             .build();
 
         User savedUser = userRepository.save(user);
 
-        if("OWNER".equals(user.getUserType().toString())){
-            StoreRequestDTO storeRequestDTO = new StoreRequestDTO();
-            ResponseEntity<StoreResponseDTO> storeResponseDTO = restTemplate.postForEntity("http://54.66.149.225:8103/api/v1/stores", storeRequestDTO, StoreResponseDTO.class);
-            Long storeId = storeResponseDTO.getBody().getStoreId();
-            savedUser.setStoreId(storeId);
-        }
+        // if("OWNER".equals(user.getUserType().toString())){
+        //     StoreRequestDTO storeRequestDTO = new StoreRequestDTO();
+        //     ResponseEntity<StoreResponseDTO> storeResponseDTO = restTemplate.postForEntity("http://54.66.149.225:8103/api/v1/stores", storeRequestDTO, StoreResponseDTO.class);
+        //     Long storeId = storeResponseDTO.getBody().getStoreId();
+        //     savedUser.setStoreId(storeId);
+        // }
 
         userRepository.save(savedUser);
 
