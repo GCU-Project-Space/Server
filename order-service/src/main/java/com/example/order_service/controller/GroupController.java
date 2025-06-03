@@ -122,6 +122,15 @@ public class GroupController {
         return ResponseEntity.ok(ResponseBody.created(response, "주문 거절에 성공했습니다."));
     }
 
+    // 주문 완료
+    @PutMapping("/{groupId}/complete")
+    public ResponseEntity<ResponseBody<GroupResponse>> completeOrder(@PathVariable Long groupId) {
+        
+        GroupResponse response = groupService.completeOrder(groupId);
+        
+        return ResponseEntity.ok(ResponseBody.created(response, "주문이 성공적으로 종료되었습니다."));
+    }
+    
     // Delete
     // 단체 주문 취소
     @DeleteMapping("/{groupId}")
