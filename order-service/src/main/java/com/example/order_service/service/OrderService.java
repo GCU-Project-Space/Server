@@ -117,7 +117,7 @@ public class OrderService{
 
         orderRepository.saveAll(orderEntities.stream()
             .map(order -> {
-                order.cancel();
+                order.complete();
                 return order; 
             }).collect(Collectors.toList())
         );

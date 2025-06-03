@@ -84,4 +84,8 @@ public class OrderEntity{
         this.status = OrderStatus.PAID;
     }
 
+    public void complete() {
+        this.status = OrderStatus.COMPLETED;
+    }
+
 }
