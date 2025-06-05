@@ -21,7 +21,6 @@ public class Menu {
 
     @ElementCollection
     @CollectionTable(name = "menu_options", joinColumns = @JoinColumn(name = "menu_id"))
-    @OrderColumn(name = "options_index")
     private List<OptionInfo> options = new ArrayList<>();
     
 
